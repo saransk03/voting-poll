@@ -79,7 +79,7 @@ const en = {
       driving: "Driving License",
     }
   },
-  messages: {
+  user_messages: {
     ageWarning: "You must be 18+ to vote, but can participate in this poll.",
     dataSecure: "Your Data is Secure",
     encryptionNotice: "All information is encrypted and used only for this survey. We never share personal data with third parties.",
@@ -89,7 +89,7 @@ const en = {
     completeFields: "Complete All Fields",
     proceed: "Proceed to Vote",
   },
-   candidates: {
+  candidates: {
     p1: { name: "Tamizhaga Vettri Kazhagam", party: "TVK" },
     p2: { name: "Dravida Munnetra Kazhagam", party: "DMK" },
     p3: { name: "All India Anna Dravida Munnetra Kazhagam", party: "AIADMK" },
@@ -109,8 +109,10 @@ const en = {
   },
   vote: {
     title: "Make Your Voice Heard",
+    question: "Which leader do you want to be crowned the Chief Minister of Tamil Nadu?",
     submitting: "Submitting...",
     castVote: "Cast Your Vote",
+    submit: "Submit",
     selectedSuffix: "selected - Click to confirm",
     instruction: "Swipe & tap on a candidate card to select",
     tapToSelect: "Tap to select"
@@ -176,7 +178,7 @@ const en = {
       }
     },
   },
-  messages: {
+  vote_messages: {
     redirecting: "Redirecting...",
     votingFor: "Voting for:",
     questionCounter: "Question",
@@ -190,7 +192,21 @@ const en = {
     surveyThankYou: "Thank you for completing the survey. Click submit to confirm your vote.",
     yourVoteFor: "Your vote for",
     confirmSubmit: "Confirm & Submit Vote"
-  }
+  },
+  cm_candi: {
+    p1: { name: "M.K.Stalin", party: "DMK" },
+    p2: { name: "Kanimozhi", party: "DMK" },
+    p3: { name: "Edappadi K Palaniswami", party: "AIADMK" },
+    p4: { name: "Seeman", party: "NTK" },
+    p5: { name: "Vijay", party: "TVK" },
+    p6: { name: "Annamalai", party: "BJP" },
+    p7: { name: "Thirumavalavan", party: "VCK" },
+    p8: { name: "Ramadoss", party: "PMK" },
+    p9: { name: "Udhayanidhi Stalin", party: "DMK" },
+    p10: { name: "Anbumani Ramadoss", party: "PMK" },
+    p11: { name: "Nainar Nagendran", party: "BJP" },
+    p12: { name: "O.Panneerselvam", party: "AIADMK" },
+  },
 };
 
 export default en;

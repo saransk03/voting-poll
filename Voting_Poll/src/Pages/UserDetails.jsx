@@ -77,10 +77,10 @@ const UserDetails = () => {
   ];
 
   const religions = [
-    { value: "hindu", label: t("options.religions.hindu"), icon: "🕉️" },
-    { value: "christian", label: t("options.religions.christian"), icon: "✝️" },
-    { value: "muslim", label: t("options.religions.muslim"), icon: "☪️" },
-    { value: "others", label: t("options.religions.others"), icon: "🙏" },
+    { value: "hindu", label: t("options.religions.hindu"), icon: "https://res.cloudinary.com/dfgyjzm7c/image/upload/v1767355558/hindu_smq0lm.png" },
+    { value: "christian", label: t("options.religions.christian"), icon: "https://res.cloudinary.com/dfgyjzm7c/image/upload/v1767355558/cross_d17hfp.png" },
+    { value: "muslim", label: t("options.religions.muslim"), icon: "https://res.cloudinary.com/dfgyjzm7c/image/upload/v1767355557/moon_av8avh.png" },
+    { value: "others", label: t("options.religions.others"), icon: "https://res.cloudinary.com/dfgyjzm7c/image/upload/v1767356101/hands_1_lqthfz.png" },
   ];
 
   const motherTongues = [
@@ -148,9 +148,9 @@ const UserDetails = () => {
   };
 
   // Section Title Component
-  const SectionTitle = ({ icon, title, tamil }) => (
+  const SectionTitle = ({ icon, title }) => (
     <div className="flex items-center gap-2 mb-8 mt-8 first:mt-0">
-      <div className="w-8 h-8 rounded-full bg-linear-to-br from-accet to-[#017474] flex items-center justify-center text-sm">
+      <div className="w-8 h-8 rounded-full bg-linear-to-br from-accet to-[#014ca8] flex items-center justify-center text-sm">
         {icon}
       </div>
       <div className="flex flex-col justify-center items-start">
@@ -168,7 +168,7 @@ const UserDetails = () => {
         {/* Header */}
         <div className="flex justify-center items-start pt-2 sticky top-0 bg-linear-to-b from-black via-black to-transparent pb-4 z-10">
           <div className="text-center">
-            <h1 className="text-[20px] font-heading uppercase font-black tracking-wide leading-6 text-transparent bg-linear-to-r from-accet to-[#017474] bg-clip-text">
+            <h1 className="text-[20px] font-heading uppercase font-black tracking-wide leading-6 text-transparent bg-linear-to-r from-accet to-[#013974] bg-clip-text">
               {t("header.title")}
             </h1>
             <p className="text-[8px] font-medium text-white/40 font-body ">
@@ -194,7 +194,7 @@ const UserDetails = () => {
               <label className="text-[10px] font-bold text-accet font-heading uppercase tracking-wide mb-2 block px-1">
                 {t("labels.fullName")}
               </label>
-            <div className="relative bg-black/5 backdrop-blur-sm border border-white/20  px-4 py-1.5 group-hover:border-accet/30 transition-colors">
+            <div className="relative bg-shade backdrop-blur-sm border border-white/20  px-4 py-1.5 group-hover:border-accet/30 transition-colors">
               <input
                 type="text"
                 name="name"
@@ -217,17 +217,17 @@ const UserDetails = () => {
                 {
                   value: "male",
                   label: t("options.genders.male"),
-                  icon: "https://ik.imagekit.io/saransk03/Voting%20Poll/man.png",
+                  icon: "https://res.cloudinary.com/dfgyjzm7c/image/upload/v1767355063/male_wum4dl.png",
                 },
                 {
                   value: "female",
                   label: t("options.genders.female"),
-                  icon: "https://ik.imagekit.io/saransk03/Voting%20Poll/businesswoman.png",
+                  icon: "https://res.cloudinary.com/dfgyjzm7c/image/upload/v1767355028/femenine_ewcoiz.png",
                 },
                 {
                   value: "other",
                   label: t("options.genders.other"),
-                  icon: "https://ik.imagekit.io/saransk03/Voting%20Poll/transition.png",
+                  icon: "https://res.cloudinary.com/dfgyjzm7c/image/upload/v1767355233/transgender_vlfmqt.png",
                 },
               ].map((gender) => (
                 <label key={gender.value} className="cursor-pointer">
@@ -242,7 +242,7 @@ const UserDetails = () => {
                     className={`p-3  border text-center backdrop-blur-xl transition-all flex flex-col justify-center gap-1 items-center duration-300 ${
                       formData.gender === gender.value
                         ? "bg-linear-to-br from-accet/20 to-[#017474]/20 border-accet text-white shadow-lg shadow-accet/20"
-                        : "bg-black/5 border-white/20 text-white/50 hover:border-white/30"
+                        : "bg-shade border-white/20 text-white hover:border-white/30"
                     }`}
                   >
                     <img src={gender.icon} alt={gender.label} className="w-6" />
@@ -274,10 +274,10 @@ const UserDetails = () => {
                     className={`py-1.5 px-2  border backdrop-blur-xl text-center transition-all duration-300 ${
                       formData.age === age.value
                         ? "bg-linear-to-br from-accet/20 to-[#017474]/20 border-accet text-white shadow-lg shadow-accet/20"
-                        : "bg-black/5 border-white/20 text-white/50 hover:border-white/30"
+                        : "bg-shade border-white/20 text-white hover:border-white/30"
                     }`}
                   >
-                    <span className="text-[11px] font-heading font-bold tracking-wide">
+                    <span className="text-[11px] font-heading font-normal tracking-wide">
                       {age.label}
                     </span>
                   </div>
@@ -289,7 +289,7 @@ const UserDetails = () => {
               <div className="mt-3 bg-yellow-500/10 border border-yellow-500/30 p-3 flex items-center gap-1">
                 <span className="text-[10px]">⚠️</span>
                 <p className="text-[9px] text-yellow-400 font-body">
-                  {t("messages.ageWarning")}
+                  {t("user_messages.ageWarning")}
                 </p>
               </div>
             )}
@@ -298,8 +298,7 @@ const UserDetails = () => {
           {/* ==================== LOCATION & BACKGROUND ==================== */}
           <SectionTitle
             icon={<MdLocationOn className="text-gray-900 " />}
-            title={t("sections.location")}
-            
+            title={t("sections.location")}          
           />
 
           {/* District Selection */}
@@ -308,7 +307,7 @@ const UserDetails = () => {
               <label className="text-[10px] font-bold text-accet font-heading uppercase tracking-wide mb-2 block px-1">
                 {t("labels.district")}
               </label>
-            <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded px-4 py-1 group-hover:border-accet/30 transition-colors">
+            <div className="relative bg-shade backdrop-blur-sm border border-white/20 px-4 py-1 group-hover:border-accet/30 transition-colors">
               
               <div 
                 onClick={() => setShowMap(true)}
@@ -340,14 +339,14 @@ const UserDetails = () => {
                     className="sr-only"
                   />
                   <div
-                    className={`py-3 px-1 rounded border backdrop-blur-xl text-center transition-all duration-300 ${
+                    className={`py-3 px-1 border backdrop-blur-xl flex flex-col gap-2 justify-center items-center text-center transition-all duration-300 ${
                       formData.religion === religion.value
                         ? "bg-linear-to-br from-accet/20 to-[#017474]/20 border-accet text-white shadow-lg shadow-accet/20"
-                        : "bg-white/5 border-white/10 text-white/50 hover:border-white/30"
+                        : "bg-shade border-white/20 text-white hover:border-white/30"
                     }`}
                   >
-                    <div className="text-lg">{religion.icon}</div>
-                    <span className="text-[8px]  font-heading uppercase tracking-widest font-bold">
+                    <img src={religion.icon} alt={religion.label} className="w-6" />
+                    <span className="text-[8px]  font-heading uppercase tracking-widest font-normal">
                       {religion.label}
                     </span>
                   </div>
@@ -372,14 +371,14 @@ const UserDetails = () => {
                     className="sr-only"
                   />
                   <div
-                    className={`py-1.5 px-2 rounded border backdrop-blur-xl text-center transition-all duration-300 ${
+                    className={`py-1.5 px-2  border backdrop-blur-xl text-center transition-all duration-300 ${
                       formData.motherTongue === lang.value
                         ? "bg-linear-to-br from-accet/20 to-[#017474]/20 border-accet text-white shadow-lg shadow-accet/20"
-                        : "bg-white/5 border-white/10 text-white/50 hover:border-white/30"
+                        : "bg-shade border-white/20 text-white hover:border-white/30"
                     }`}
                   >
-                    <div className="text-lg font-bold">{lang.icon}</div>
-                    <span className="text-[9px] font-bold font-heading uppercase tracking-widest">
+                    <div className="text-lg font-normal">{lang.icon}</div>
+                    <span className="text-[9px] font-normal font-heading uppercase tracking-widest">
                       {lang.label}
                     </span>
                   </div>
@@ -400,9 +399,9 @@ const UserDetails = () => {
             <label className="text-[10px] text-accet font-bold font-heading uppercase tracking-widest mb-2 block px-1">
                {t("labels.phoneNumber")}
             </label>
-            <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded px-4 py-1.5 group-hover:border-accet/30 transition-colors"> 
+            <div className="relative bg-shade backdrop-blur-sm border border-white/20 px-4 py-1.5 group-hover:border-accet/30 transition-colors"> 
               <div className="flex items-center gap-2">
-                <span className="text-white/50 font-body text-[12px] py-1 rounded">
+                <span className="text-white font-body text-[12px] py-1 rounded">
                   +91
                 </span>
                 <input
@@ -461,13 +460,13 @@ const UserDetails = () => {
                     className="sr-only"
                   />
                   <div
-                    className={`py-2 px-2 min-h-16 backdrop-blur-xl rounded border text-center flex flex-col justify-center items-center transition-all duration-300 ${
+                    className={`py-2 px-2 min-h-16 backdrop-blur-xl border text-center flex flex-col justify-center items-center transition-all duration-300 ${
                       formData.community === community.value
                         ? "bg-linear-to-br from-accet/20 to-[#017474]/20 border-accet text-white shadow-lg shadow-accet/20"
-                        : "bg-white/5 border-white/10 text-white/50 hover:border-white/30"
+                        : "bg-shade border-white/20 text-white hover:border-white/30"
                     }`}
                   >
-                    <span className="text-[12px] font-heading font-bold leading-5">
+                    <span className="text-[12px] font-heading font-normal tracking-widest leading-5">
                       {community.label}
                     </span>
                     <span className="text-[7px] font-body">
@@ -485,7 +484,7 @@ const UserDetails = () => {
               <label className="text-[10px] font-bold text-accet font-heading uppercase tracking-widest mb-2 block px-1">
                 {t("labels.caste")}
               </label>
-            <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded px-4 py-1.5 group-hover:border-accet/30 transition-colors">
+            <div className="relative bg-shade backdrop-blur-sm border border-white/20 px-4 py-1.5 group-hover:border-accet/30 transition-colors">
               <input
                 type="text"
                 name="caste"
@@ -523,14 +522,14 @@ const UserDetails = () => {
                     className="sr-only"
                   />
                   <div
-                    className={`p-4 rounded border backdrop-blur-xl text-center transition-all flex flex-col justify-center gap-1 items-center duration-300 ${
+                    className={`p-4 border backdrop-blur-xl text-center transition-all flex flex-col justify-center gap-1 items-center duration-300 ${
                       formData.idType === id.value
                         ? "bg-linear-to-br from-accet/20 to-[#017474]/20 border-accet text-white shadow-lg shadow-accet/20"
-                        : "bg-white/5 border-white/10 text-white/50 hover:border-white/30"
+                        : "bg-shade border-white/20 text-white hover:border-white/30"
                     }`}
                   >
                     <img src={id.icon} alt={id.label} className="w-6" />
-                    <span className="text-[9px] font-bold font-heading uppercase tracking-widest">
+                    <span className="text-[9px] font-normal font-heading uppercase tracking-widest">
                       {id.label}
                     </span>
                   </div>
@@ -543,7 +542,7 @@ const UserDetails = () => {
           {formData.idType && (
             <div className="relative group mb-4 animate-fadeIn">
               <div className="absolute inset-0 bg-linear-to-r from-accet to-[#017474] rounded-lg blur opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
-              <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded px-4 py-2 group-hover:border-accet/30 transition-colors">
+              <div className="relative bg-shade backdrop-blur-sm border border-white/20 px-4 py-2 group-hover:border-accet/30 transition-colors">
                 <label className="text-[10px] text-accet font-heading uppercase tracking-wide flex items-center gap-2">
                   {formData.idType === "aadhar"
                     ? t("labels.aadharNumber")
@@ -586,7 +585,7 @@ const UserDetails = () => {
                       }}
                     />
                   </div>
-                  <span className="text-[8px] text-white/40 font-body">
+                  <span className="text-[8px] text-white font-body">
                     {formData.idNumber.length}/
                     {
                       idTypes.find((id) => id.value === formData.idType)
@@ -599,7 +598,7 @@ const UserDetails = () => {
           )}
 
           {/* Privacy Notice */}
-          <div className="bg-linear-to-r from-green-500/10 to-emerald-500/10 backdrop-blur-xl border border-green-500/30 rounded p-4 mt-6">
+          <div className="bg-linear-to-r from-green-500/10 to-emerald-500/10 backdrop-blur-xl border border-green-500/30 p-4 mt-6">
             <div className="flex items-start gap-3">
               <div className="w-8 h-8 rounded-full backdrop-blur-xl bg-green-500/20 flex items-center justify-center shrink-0">
                 <svg
@@ -618,10 +617,10 @@ const UserDetails = () => {
               </div>
               <div>
                 <p className="text-[10px] text-green-400 font-heading uppercase tracking-wider">
-                  {t("messages.dataSecure")}
+                  {t("user_messages.dataSecure")}
                 </p>
-                <p className="text-[8px] text-white/50 font-body mt-1 leading-relaxed">
-                 {t("messages.encryptionNotice")}
+                <p className="text-[8px] text-white/50 font-extralight font-body mt-1 leading-relaxed">
+                 {t("user_messages.encryptionNotice")}
                 </p>
               </div>
             </div>
@@ -636,16 +635,16 @@ const UserDetails = () => {
               type="checkbox"
               checked={agreed}
               onChange={(e) => setAgreed(e.target.checked)}
-              className="mt-1 accent-accet w-4 h-4 cursor-pointer"
+              className="custom-checkbox w-3.5 h-3.5"
             />
-            <p className="text-[9px] text-white/50 font-body leading-relaxed">
-              {t("messages.agreement")}{' '}
-              <span className="text-accet underline cursor-pointer">
-                {t("messages.privacyPolicy")}
+            <p className="text-[9px] text-white/50 font-sans font-light leading-relaxed">
+              {t("user_messages.agreement")}{' '}
+              <span className="text-accet underline font-medium cursor-pointer">
+                {t("user_messages.privacyPolicy")}
               </span>{" "}
               and{" "}
-              <span className="text-accet underline cursor-pointer">
-                {t("messages.terms")}
+              <span className="text-accet underline font-medium cursor-pointer">
+                {t("user_messages.terms")}
               </span>
               .
             </p>
@@ -664,7 +663,7 @@ const UserDetails = () => {
           >
             {isFormValid() ? (
               <>
-                <span>{t("messages.proceed")}</span>
+                <span>{t("user_messages.proceed")}</span>
                 <svg
                   className="w-4 h-4"
                   fill="none"
@@ -681,7 +680,7 @@ const UserDetails = () => {
               </>
             ) : (
               <>
-                <span>{t("messages.completeFields")}</span>
+                <span>{t("user_messages.completeFields")}</span>
                 <span className="text-[10px] opacity-50">
                   (
                   {Object.values(formData).filter((v) => v).length +
@@ -695,18 +694,13 @@ const UserDetails = () => {
           {/* Quick Links */}
           <div className="text-[7px] tracking-widest text-white/40 flex justify-between items-center mt-2 px-4 font-heading font-light">
             <p className="hover:text-white cursor-pointer transition-colors">
-              {t("messages.privacyPolicy")}
+              {t("user_messages.privacyPolicy")}
             </p>
             <p className="hover:text-white cursor-pointer transition-colors">
-              {t("messages.terms")}
+              {t("user_messages.terms")}
             </p>
           </div>
-        </div>
-
-        {/* Background Decorations */}
-        <div className="fixed top-20 left-0 h-40 w-40 bg-accet/20 rounded-full blur-3xl -z-10 pointer-events-none" />
-        <div className="fixed bottom-40 right-0 h-32 w-32 bg-[#017474]/30 rounded-full blur-3xl -z-10 pointer-events-none" />
-        <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-60 w-60 bg-blue-500/10 rounded-full blur-3xl -z-10 pointer-events-none" />
+        </div>       
 
         {showMap && (
           <DistrictMapPicker

@@ -10,6 +10,7 @@ import "./i18n/i18n";
 import { useTranslation } from "react-i18next";
 // import HolographicBackground from "./Components/HolographicBackground";
 import DigitalGlobeBackground from "./Components/DigitalGlobeBackground";
+import Candidate from "./Pages/Canditdate";
 
 function App() {
   const { i18n } = useTranslation();
@@ -45,7 +46,7 @@ function App() {
     return (
       <>
         {/* <HolographicBackground /> */}
-              <DigitalGlobeBackground />
+        <DigitalGlobeBackground />
         <div className="scanline" />
         <div className="vignette" />
         <LanguageDialog onLanguageSelect={() => setLanguageSelected(true)} />
@@ -65,6 +66,7 @@ function App() {
           <Route path="/form" element={<UserData />} />
           <Route path="/vote" element={<Vote />} />
           <Route path="/survey" element={<QnA />} />
+          <Route path="/candidate" element={<Candidate />} />
         </Routes>
       </BrowserRouter>
     </>

@@ -1,6 +1,8 @@
+// src/Pages/QnA.jsx
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
+import DigitalGlobeBackground from "../Components/DigitalGlobeBackground";
 
 const QnA = () => {
   const { t } = useTranslation();
@@ -12,10 +14,8 @@ const QnA = () => {
   const [answers, setAnswers] = useState({});
   const [selectedOption, setSelectedOption] = useState(null);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [isCompleted, setIsCompleted] = useState(false);
-  const [showConfetti, setShowConfetti] = useState(false);
   const [showError, setShowError] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isCompleting, setIsCompleting] = useState(false); // 👈 புதிய state
 
   const questions = [
     {
@@ -134,7 +134,7 @@ const QnA = () => {
         {
           id: "h",
           text: "No alliance",
-          images: [], // Empty array for text-only option
+          images: [],
         },
       ],
     },
@@ -148,9 +148,10 @@ const QnA = () => {
 
   const progress = ((currentQuestion + 1) / questions.length) * 100;
   const question = questions[currentQuestion];
+  const isLastQuestion = currentQuestion === questions.length - 1;
 
   const handleOptionSelect = (optionId) => {
-    if (isAnimating) return;
+    if (isAnimating || isCompleting) return;
     setSelectedOption(optionId);
     setShowError(false);
   };
@@ -161,30 +162,37 @@ const QnA = () => {
       return;
     }
 
-    if (isAnimating) return;
+    if (isAnimating || isCompleting) return;
+
+    const updatedAnswers = {
+      ...answers,
+      [question.id]: selectedOption,
+    };
+    setAnswers(updatedAnswers);
+
+    if (isLastQuestion) {      
+      navigate("/candidate", {
+        state: {
+          candidate: selectedCandidate,
+          answers: updatedAnswers,
+        },
+        replace: true,
+      });
+      return;
+    }
 
     setIsAnimating(true);
-    setAnswers((prev) => ({
-      ...prev,
-      [question.id]: selectedOption,
-    }));
 
     setTimeout(() => {
-      if (currentQuestion < questions.length - 1) {
-        setCurrentQuestion((prev) => prev + 1);
-        setSelectedOption(answers[questions[currentQuestion + 1]?.id] || null);
-      } else {
-        setIsCompleted(true);
-        setShowConfetti(true);
-        setTimeout(() => setShowConfetti(false), 3000);
-      }
+      setCurrentQuestion((prev) => prev + 1);
+      setSelectedOption(answers[questions[currentQuestion + 1]?.id] || null);
       setIsAnimating(false);
       setShowError(false);
-    }, 400);
+    }, 300);
   };
 
   const handlePrevious = () => {
-    if (currentQuestion > 0 && !isAnimating) {
+    if (currentQuestion > 0 && !isAnimating && !isCompleting) {
       setIsAnimating(true);
       setShowError(false);
       setTimeout(() => {
@@ -195,32 +203,10 @@ const QnA = () => {
     }
   };
 
-  const handleSubmit = async () => {
-    setIsSubmitting(true);
 
-    const finalData = {
-      candidate: selectedCandidate,
-      answers: answers,
-      submittedAt: new Date().toISOString(),
-    };
-
-    console.log("Final Vote Data:", finalData);
-
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      alert(`Vote submitted successfully for ${selectedCandidate.name}!`);
-      navigate("/vote", { replace: true });
-    } catch (error) {
-      console.error("Submit error:", error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  // Loading state if no candidate
   if (!selectedCandidate) {
     return (
-      <div className="min-h-[100dvh] h-[100dvh] bg-black flex items-center justify-center">
+      <div className="min-h-dvh h-dvh bg-black flex items-center justify-center">
         <div className="text-center">
           <svg
             className="animate-spin h-10 w-10 text-accet mx-auto mb-4"
@@ -247,183 +233,7 @@ const QnA = () => {
     );
   }
 
-  // Completion Screen
-  if (isCompleted) {
-    return (
-      <div className="min-h-dvh h-dvh bg-black relative flex items-center justify-center">
-        {/* Background Effects */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-20 -left-32 w-96 h-96 bg-accet/20 rounded-full blur-[120px] animate-pulse" />
-          <div className="absolute bottom-20 -right-32 w-96 h-96 bg-[#017474]/20 rounded-full blur-[120px] animate-pulse" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-accet/10 rounded-full blur-[150px]" />
-        </div>
 
-        {/* Confetti Effect */}
-        {showConfetti && (
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            {[...Array(50)].map((_, i) => (
-              <div
-                key={i}
-                className="absolute w-2 h-2 animate-confetti"
-                style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `-5%`,
-                  backgroundColor: ["#00ffc8", "#017474", "#00d4aa", "#ffffff"][
-                    Math.floor(Math.random() * 4)
-                  ],
-                  animationDelay: `${Math.random() * 2}s`,
-                  animationDuration: `${2 + Math.random() * 2}s`,
-                  transform: `rotate(${Math.random() * 360}deg)`,
-                }}
-              />
-            ))}
-          </div>
-        )}
-
-        {/* Completion Card */}
-        <div className="relative z-10 w-[90%] max-w-md mx-auto px-4">
-          <div className="absolute -inset-1 bg-gradient-to-r from-accet via-[#017474] to-accet rounded-3xl blur-lg opacity-50 animate-pulse" />
-
-          <div className="relative bg-gradient-to-b from-accet/10 via-black/90 to-black/95 border-2 border-accet/50 rounded-3xl p-6 sm:p-8 text-center">
-            {/* Success Icon */}
-            <div className="relative w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-6">
-              <div className="absolute inset-0 bg-accet/30 rounded-full blur-xl animate-pulse" />
-              <div className="relative w-full h-full bg-gradient-to-br from-accet to-[#017474] rounded-full flex items-center justify-center">
-                <svg
-                  className="w-10 h-10 sm:w-12 sm:h-12 text-black"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={3}
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              </div>
-              <div className="absolute -inset-2 border-2 border-accet/30 rounded-full animate-ping" />
-              <div className="absolute -inset-4 border border-accet/20 rounded-full animate-pulse" />
-            </div>
-
-            <h1 className="text-[24px] sm:text-[28px] font-heading uppercase font-black tracking-wider text-transparent bg-gradient-to-r from-accet via-[#00ffcc] to-[#017474] bg-clip-text mb-2">
-              Survey Complete!
-            </h1>
-            <h2 className="text-[14px] sm:text-[16px] font-tamil font-bold text-transparent bg-gradient-to-r from-[#017474] to-accet bg-clip-text mb-4">
-              கருத்துக்கணிப்பு முடிந்தது!
-            </h2>
-
-            <p className="text-white/60 text-xs sm:text-sm mb-6">
-              Thank you for completing the survey. Click submit to confirm your
-              vote.
-            </p>
-
-            {/* Candidate Info */}
-            <div className="bg-white/5 rounded-xl p-4 mb-6 border border-accet/20">
-              <p className="text-white/40 text-xs mb-2">Your vote for</p>
-              <div className="flex items-center justify-center gap-3">
-                <img
-                  src={selectedCandidate.party_logo}
-                  alt={selectedCandidate.party}
-                  className="w-12 h-12 rounded-full border-2 border-accet/40 object-cover"
-                />
-                <div className="text-left">
-                  <h3 className="text-accet font-heading font-bold text-lg uppercase tracking-wide">
-                    {selectedCandidate.name}
-                  </h3>
-                  <p className="text-white/50 text-xs">
-                    {selectedCandidate.party} | {selectedCandidate.tamil_party}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Summary */}
-            <div className="flex justify-center gap-4 mb-6">
-              <div className="bg-accet/10 rounded-lg px-4 py-2 border border-accet/30">
-                <p className="text-accet font-bold text-xl">
-                  {questions.length}
-                </p>
-                <p className="text-white/40 text-xs">Questions</p>
-              </div>
-              <div className="bg-accet/10 rounded-lg px-4 py-2 border border-accet/30">
-                <p className="text-accet font-bold text-xl">
-                  {Object.keys(answers).length}
-                </p>
-                <p className="text-white/40 text-xs">Answered</p>
-              </div>
-            </div>
-
-            <button
-              onClick={handleSubmit}
-              disabled={isSubmitting}
-              className="w-full py-3 rounded-xl uppercase font-black tracking-widest text-[13px] font-heading bg-gradient-to-r from-accet via-[#00d4aa] to-[#017474] text-black hover:shadow-[0_0_40px_rgba(0,255,200,0.4)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <span className="flex items-center justify-center gap-2">
-                {isSubmitting ? (
-                  <>
-                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                        fill="none"
-                      />
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      />
-                    </svg>
-                    <span>Submitting...</span>
-                  </>
-                ) : (
-                  <>
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                    <span>Confirm & Submit Vote</span>
-                  </>
-                )}
-              </span>
-            </button>
-          </div>
-        </div>
-
-        <style>{`
-          @keyframes confetti {
-            0% {
-              transform: translateY(0) rotate(0deg);
-              opacity: 1;
-            }
-            100% {
-              transform: translateY(100vh) rotate(720deg);
-              opacity: 0;
-            }
-          }
-          .animate-confetti {
-            animation: confetti 3s ease-out forwards;
-          }
-        `}</style>
-      </div>
-    );
-  }
-
-  // Helper function to render images with + sign
   const renderAllianceImages = (images, isSelected) => {
     return (
       <div className="flex items-center justify-start gap-2 sm:gap-2 flex-wrap">
@@ -432,7 +242,7 @@ const QnA = () => {
             <div
               className={`relative w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full overflow-hidden border-2 transition-all duration-300 ${
                 isSelected
-                  ? "border-accet shadow-[0_0_10px_rgba(0,255,200,0.5)]"
+                  ? "border-accet shadow-[0_0_10px_rgba(95,93,233,0.3)]"
                   : "border-white/20 group-hover:border-accet/50"
               }`}
             >
@@ -441,13 +251,10 @@ const QnA = () => {
                 alt={`Party ${idx + 1}`}
                 className="w-full h-full object-cover"
                 onError={(e) => {
-                  e.target.src =
-                    "https://via.placeholder.com/50x50?text=Logo";
+                  e.target.src = "https://via.placeholder.com/50x50?text=Logo";
                 }}
               />
             </div>
-
-            {/* Plus Sign (not after last image) */}
             {idx < images.length - 1 && (
               <span
                 className={`text-lg sm:text-xl font-bold transition-colors duration-300 ${
@@ -465,21 +272,9 @@ const QnA = () => {
 
   return (
     <div className="min-h-dvh bg-black relative">
-      {/* Background Effects */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-20 -left-32 w-96 h-96 bg-accet/20 rounded-full blur-[120px] animate-pulse" />
-        <div className="absolute bottom-20 -right-32 w-96 h-96 bg-[#017474]/20 rounded-full blur-[120px] animate-pulse" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-150 bg-accet/5 rounded-full blur-[150px]" />
-
-        <div
-          className="absolute inset-0 opacity-[0.02]"
-          style={{
-            backgroundImage: `linear-gradient(rgba(0, 255, 200, 0.3) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(0, 255, 200, 0.3) 1px, transparent 1px)`,
-            backgroundSize: "50px 50px",
-          }}
-        />
-      </div>
+      <DigitalGlobeBackground />
+      <div className="scanline" />
+      <div className="vignette" />
 
       {/* Main Content */}
       <div className="h-full w-full relative z-10 flex flex-col">
@@ -494,7 +289,7 @@ const QnA = () => {
               />
               <div className="bg-accet/10 border border-accet/30 rounded-full px-3 py-1">
                 <span className="text-accet text-[10px] font-medium">
-                  {t("messages.votingFor")}{" "}
+                  {t("vote_messages.votingFor")}{" "}
                   <span className="font-bold">{selectedCandidate.name}</span>
                 </span>
               </div>
@@ -502,7 +297,6 @@ const QnA = () => {
 
             {/* Progress Section */}
             <div className="relative max-w-md mx-auto mt-4">
-              {/* Step Indicators */}
               <div className="flex justify-between items-center mb-2 px-1">
                 {questions.map((_, index) => (
                   <div
@@ -516,7 +310,7 @@ const QnA = () => {
                     <div
                       className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold transition-all duration-500 ${
                         index < currentQuestion
-                          ? "bg-gradient-to-br from-accet to-[#017474] text-black"
+                          ? "bg-linear-to-br from-accet to-accet/30 text-black"
                           : index === currentQuestion
                           ? "bg-accet/20 border-2 border-accet text-accet"
                           : "bg-white/5 border border-white/20 text-white/30"
@@ -547,19 +341,17 @@ const QnA = () => {
                 ))}
               </div>
 
-              {/* Progress Line */}
               <div className="h-1 bg-white/10 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-accet via-[#00d4aa] to-[#017474] rounded-full transition-all duration-500 ease-out"
+                  className="h-full bg-linear-to-r from-accet via-[#8770f8] to-accet/50 rounded-full transition-all duration-500 ease-out"
                   style={{ width: `${progress}%` }}
                 />
               </div>
 
-              {/* Question Counter */}
               <div className="flex justify-between items-center mt-2 text-[10px]">
                 <span className="text-white/40">
-                  {t("messages.questionCounter")} {currentQuestion + 1}{" "}
-                  {t("messages.of")} {questions.length}
+                  {t("vote_messages.questionCounter")} {currentQuestion + 1}{" "}
+                  {t("vote_messages.of")} {questions.length}
                 </span>
               </div>
             </div>
@@ -568,20 +360,18 @@ const QnA = () => {
           {/* Question Card */}
           <div className="flex-1 min-h-0 flex flex-col justify-center">
             <div
-              className={`transition-all duration-400 mx-auto w-full max-w-2xl ${
+              className={`transition-all duration-300 mx-auto w-full max-w-2xl ${
                 isAnimating
                   ? "opacity-0 translate-x-10"
                   : "opacity-100 translate-x-0"
               }`}
             >
-              {/* Question */}
               <div className="text-center mb-5">
                 <p className="text-[14px] sm:text-[16px] font-heading font-bold text-accet">
                   {question.question}
                 </p>
               </div>
 
-              {/* Error Message */}
               {showError && (
                 <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-center animate-shake">
                   <p className="text-red-400 text-sm font-medium flex items-center justify-center gap-2">
@@ -598,12 +388,11 @@ const QnA = () => {
                         d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                       />
                     </svg>
-                    Please select an option to continue
+                    {t("vote_messages.selectOption") || "Please select an option to continue"}
                   </p>
                 </div>
               )}
 
-              {/* Options Grid */}
               <div
                 className={`grid gap-2 sm:gap-3 ${
                   question.type === "image"
@@ -619,10 +408,11 @@ const QnA = () => {
                     <button
                       key={`${option.id}-${index}`}
                       onClick={() => handleOptionSelect(option.id)}
+                      disabled={isAnimating || isCompleting}
                       className={`group relative overflow-hidden transition-all duration-300 transform rounded-xl ${
                         isSelected
-                          ? "scale-[1.02] bg-gradient-to-br from-accet/20 via-accet/10 to-transparent border-2 border-accet shadow-[0_0_20px_rgba(0,255,200,0.3)]"
-                          : `bg-white/5 border ${
+                          ? "scale-[1.02] bg-linear-to-br from-accet/20 via-accet/10 to-shade backdrop-blur-sm border-2 border-accet shadow-[0_0_20px_rgba(95,98,233,0.3)]"
+                          : `bg-shade border ${
                               showError
                                 ? "border-red-500/30"
                                 : "border-white/10"
@@ -631,31 +421,23 @@ const QnA = () => {
                         question.type === "image"
                           ? "px-3 py-4 sm:px-4 sm:py-5"
                           : "px-4 py-3 sm:p-4"
-                      }`}
-                      style={{
-                        animationDelay: `${index * 50}ms`,
-                      }}
+                      } ${isAnimating || isCompleting ? "pointer-events-none" : ""}`}
                     >
-                      {/* Selection Glow Effect */}
                       {isSelected && (
-                        <div className="absolute inset-0 bg-gradient-to-r from-accet/10 via-transparent to-accet/10 animate-pulse" />
+                        <div className="absolute inset-0 bg-linear-to-r from-accet/10 via-transparent to-accet/10 animate-pulse" />
                       )}
 
                       <div className="relative flex items-center justify-between gap-3">
-                        {/* IMAGE TYPE - Alliance Logos */}
                         {question.type === "image" && hasImages ? (
                           <>
-                            {/* Alliance Images */}
                             <div className="flex-1">
                               {renderAllianceImages(option.images, isSelected)}
                             </div>
-
-                            {/* Selection Indicator */}
                             <div
                               className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center transition-all duration-300 shrink-0 ${
                                 isSelected
                                   ? "bg-accet scale-100"
-                                  : "bg-white/10 scale-75 opacity-0 group-hover:opacity-100 group-hover:scale-100"
+                                  : "bg-shade scale-75 opacity-0 group-hover:opacity-100 group-hover:scale-100"
                               }`}
                             >
                               {isSelected ? (
@@ -678,21 +460,16 @@ const QnA = () => {
                             </div>
                           </>
                         ) : question.type === "image" && option.text ? (
-                          /* Text option in image question (like "No alliance") */
                           <>
                             <div className="flex-1 flex items-center justify-start">
-                              
-                                <p
-                                  className={`font-heading font-normal text-sm sm:text-base transition-colors duration-300 ${
-                                    isSelected ? "text-accet" : "text-white/70"
-                                  }`}
-                                >
-                                  {option.text}
-                                </p>
-                              
+                              <p
+                                className={`font-heading font-normal text-sm sm:text-base transition-colors duration-300 ${
+                                  isSelected ? "text-accet" : "text-white/70"
+                                }`}
+                              >
+                                {option.text}
+                              </p>
                             </div>
-
-                            {/* Selection Indicator */}
                             <div
                               className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center transition-all duration-300 shrink-0 ${
                                 isSelected
@@ -720,7 +497,6 @@ const QnA = () => {
                             </div>
                           </>
                         ) : (
-                          /* TEXT TYPE OPTION */
                           <>
                             <div className="flex-1 text-left">
                               <p
@@ -733,8 +509,6 @@ const QnA = () => {
                                 {option.text}
                               </p>
                             </div>
-
-                            {/* Checkbox/Radio indicator */}
                             <div
                               className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center transition-all duration-300 shrink-0 ${
                                 isSelected
@@ -764,7 +538,6 @@ const QnA = () => {
                         )}
                       </div>
 
-                      {/* Shimmer Effect on Hover */}
                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                     </button>
                   );
@@ -777,9 +550,9 @@ const QnA = () => {
           <div className="shrink-0 flex items-center justify-between gap-4 mt-4 max-w-lg mx-auto w-full">
             <button
               onClick={handlePrevious}
-              disabled={currentQuestion === 0}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-heading font-bold text-sm uppercase tracking-wider transition-all duration-300 ${
-                currentQuestion === 0
+              disabled={currentQuestion === 0 || isAnimating || isCompleting}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-heading font-bold text-sm uppercase tracking-wider transition-all duration-300 ${
+                currentQuestion === 0 || isAnimating || isCompleting
                   ? "bg-white/5 text-white/20 cursor-not-allowed"
                   : "bg-white/10 text-white/70 hover:bg-white/20 hover:text-white border border-white/10 hover:border-white/30"
               }`}
@@ -797,41 +570,65 @@ const QnA = () => {
                   d="M15 19l-7-7 7-7"
                 />
               </svg>
-              <span className="hidden sm:inline">{t("messages.back")}</span>
+              <span className="hidden sm:inline">{t("vote_messages.back")}</span>
             </button>
 
             <button
               onClick={handleNext}
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-heading font-bold text-sm uppercase tracking-wider transition-all duration-300 ${
-                selectedOption
-                  ? "bg-gradient-to-r from-accet via-[#00d4aa] to-[#017474] text-black hover:shadow-[0_0_30px_rgba(0,255,200,0.3)] hover:scale-[1.02] active:scale-[0.98]"
-                  : "bg-gradient-to-r from-accet/50 to-[#017474]/50 text-black/70"
+              disabled={isAnimating || isCompleting}
+              className={`flex items-center gap-2 px-6 py-2.5 rounded-lg font-heading font-bold text-sm uppercase tracking-wider transition-all duration-300 ${
+                isAnimating || isCompleting
+                  ? "bg-accet/50 text-black/50 cursor-not-allowed"
+                  : selectedOption
+                  ? "bg-linear-to-r from-accet to-accet/50 text-black hover:shadow-[0_0_30px_rgba(95,98,233,0.2)] hover:scale-[1.02] active:scale-[0.98]"
+                  : "bg-linear-to-r from-accet/50 to-accet/50 text-black/70"
               }`}
             >
               <span>
-                {currentQuestion === questions.length - 1
-                  ? t("messages.finish")
-                  : t("messages.next")}
+                {isLastQuestion
+                  ? t("vote_messages.finish")
+                  : t("vote_messages.next")}
               </span>
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
+              {isCompleting ? (
+                <svg
+                  className="animate-spin w-4 h-4"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                    fill="none"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              )}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Custom Styles */}
       <style>{`
         @keyframes shake {
           0%, 100% { transform: translateX(0); }
@@ -840,22 +637,6 @@ const QnA = () => {
         }
         .animate-shake {
           animation: shake 0.5s ease-in-out;
-        }
-        
-        @keyframes bounce-in {
-          0% { transform: scale(0); opacity: 0; }
-          50% { transform: scale(1.2); }
-          100% { transform: scale(1); opacity: 1; }
-        }
-        .animate-bounce-in {
-          animation: bounce-in 0.3s ease-out;
-        }
-        
-        .line-clamp-2 {
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
         }
       `}</style>
     </div>

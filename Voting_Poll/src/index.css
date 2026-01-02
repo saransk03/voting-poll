@@ -6,7 +6,8 @@
   --font-body: "Exo 2", sans-serif ; /* "Geologica", sans-serif , "Exo 2", sans-serif */
   --font-tamil: "Anek Tamil", sans-serif ; 
   --color-accet: #5F62E9;   
-  /* end color 02D1D1 border color :080808  pink :7A1F3E */
+  --color-shade: #07070B;   
+  /* end color green-02D1D1 , blue shade -8770f8 border color :080808  pink :7A1F3E */
 }
 
 .tamil-mode * {
@@ -72,4 +73,33 @@ body {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+}
+
+.custom-checkbox {
+appearance: none;
+background-color: rgba(255, 255, 255, 0.05);
+color: currentColor;
+border: 1px solid rgba(255, 255, 255, 0.2);
+border-radius: 0.125rem;
+display: flex;
+justify-content: center;
+align-items: center;
+cursor: pointer;
+transition: all 0.2s ease;
+}
+.custom-checkbox::before {
+content: "";
+width: 8px !important;
+height: 8px !important;
+transform: scale(0);
+transition: 120ms transform ease-in-out;
+box-shadow: inset 1rem 1rem #6366f1;
+background-color: #6366f1;
+}
+.custom-checkbox:checked {
+border-color: #6366f1;
+box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+}
+.custom-checkbox:checked::before {
+transform: scale(1);
 }
