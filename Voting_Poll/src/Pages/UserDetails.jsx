@@ -2,8 +2,11 @@ import { useState } from "react";
 import { HiMiniUser, HiPhone } from "react-icons/hi2";
 import { MdLocationOn, MdVerifiedUser } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import DistrictMapPicker from "../Components/DistrictMapPicker";
+import { useTranslation } from "react-i18next";
 
 const UserDetails = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -19,7 +22,7 @@ const UserDetails = () => {
     idType: "",
     idNumber: "",
   });
-
+  const [showMap, setShowMap] = useState(false);
   const [agreed, setAgreed] = useState(false);
 
   // Options Data
@@ -33,44 +36,85 @@ const UserDetails = () => {
   ];
 
   const districts = [
-    "Ariyalur", "Chengalpattu", "Chennai", "Coimbatore", "Cuddalore",
-    "Dharmapuri", "Dindigul", "Erode", "Kallakurichi", "Kanchipuram",
-    "Kanyakumari", "Karur", "Krishnagiri", "Madurai", "Mayiladuthurai",
-    "Nagapattinam", "Namakkal", "Nilgiris", "Perambalur", "Pudukkottai",
-    "Ramanathapuram", "Ranipet", "Salem", "Sivaganga", "Tenkasi",
-    "Thanjavur", "Theni", "Thoothukudi", "Tiruchirappalli", "Tirunelveli",
-    "Tirupathur", "Tiruppur", "Tiruvallur", "Tiruvannamalai", "Tiruvarur",
-    "Vellore", "Viluppuram", "Virudhunagar"
+    "Ariyalur",
+    "Chengalpattu",
+    "Chennai",
+    "Coimbatore",
+    "Cuddalore",
+    "Dharmapuri",
+    "Dindigul",
+    "Erode",
+    "Kallakurichi",
+    "Kanchipuram",
+    "Kanyakumari",
+    "Karur",
+    "Krishnagiri",
+    "Madurai",
+    "Mayiladuthurai",
+    "Nagapattinam",
+    "Namakkal",
+    "Nilgiris",
+    "Perambalur",
+    "Pudukkottai",
+    "Ramanathapuram",
+    "Ranipet",
+    "Salem",
+    "Sivaganga",
+    "Tenkasi",
+    "Thanjavur",
+    "Theni",
+    "Thoothukudi",
+    "Tiruchirappalli",
+    "Tirunelveli",
+    "Tirupathur",
+    "Tiruppur",
+    "Tiruvallur",
+    "Tiruvannamalai",
+    "Tiruvarur",
+    "Vellore",
+    "Viluppuram",
+    "Virudhunagar",
   ];
 
   const religions = [
-    { value: "hindu", label: "Hindu", icon: "🕉️" },
-    { value: "christian", label: "Christian", icon: "✝️" },
-    { value: "muslim", label: "Muslim", icon: "☪️" },
-    { value: "others", label: "Others", icon: "🙏" },
+    { value: "hindu", label: t("options.religions.hindu"), icon: "🕉️" },
+    { value: "christian", label: t("options.religions.christian"), icon: "✝️" },
+    { value: "muslim", label: t("options.religions.muslim"), icon: "☪️" },
+    { value: "others", label: t("options.religions.others"), icon: "🙏" },
   ];
 
   const motherTongues = [
-    { value: "tamil", label: "Tamil", icon: "த" },
-    { value: "telugu", label: "Telugu", icon: "తె" },
-    { value: "malayalam", label: "Malayalam", icon: "മ" },
-    { value: "kannada", label: "Kannada", icon: "ಕ" },
-    { value: "hindi", label: "Hindi", icon: "हि" },
-    { value: "others", label: "Others", icon: "+" },
+    { value: "tamil", label:  t("options.languages.tamil") , icon: "த" },
+    { value: "telugu", label: t("options.languages.telugu"), icon: "తె" },
+    { value: "malayalam", label: t("options.languages.malayalam"), icon: "മ" },
+    { value: "kannada", label: t("options.languages.kannada"), icon: "ಕ" },
+    { value: "hindi", label: t("options.languages.hindi"), icon: "हि" },
+    { value: "others", label: t("options.languages.others"), icon: "+" },
   ];
 
   const communities = [
-    { value: "bc", label: "BC", full: "Backward Class" },
-    { value: "mbc", label: "MBC", full: "Most Backward Class" },
-    { value: "oc", label: "OC", full: "General" },
-    { value: "dnc", label: "DNC", full: "Denotified Communities" },
-    { value: "sc", label: "SC", full: "Scheduled Caste" },
-    { value: "st", label: "ST", full: "Scheduled Tribe" },
+    { value: "bc", label: "BC", full: t("options.communities.bc") },
+    { value: "mbc", label: "MBC", full: t("options.communities.mbc") },
+    { value: "fc", label: "FC", full: t("options.communities.fc") },
+    { value: "sc", label: "SC", full: t("options.communities.sc") },
+    { value: "st", label: "ST", full: t("options.communities.st") },
   ];
 
   const idTypes = [
-    { value: "aadhar", label: "Aadhar Card", icon: "https://ik.imagekit.io/saransk03/Voting%20Poll/employee-card.png", placeholder: "Enter 12-digit Aadhar", maxLength: 12 },
-    { value: "driving", label: "Driving License", icon: "https://ik.imagekit.io/saransk03/Voting%20Poll/driving-licence.png", placeholder: "Enter DL number", maxLength: 16 },
+    {
+      value: "aadhar",
+      label: t("options.ids.aadhar"),
+      icon: "https://ik.imagekit.io/saransk03/Voting%20Poll/employee-card.png",
+      placeholder: t("placeholders.aadhar"),
+      maxLength: 12,
+    },
+    {
+      value: "driving",
+      label: t("options.ids.driving"),
+      icon: "https://ik.imagekit.io/saransk03/Voting%20Poll/driving-licence.png",
+      placeholder: t("placeholders.dl"),
+      maxLength: 16,
+    },
   ];
 
   const handleChange = (e) => {
@@ -109,8 +153,10 @@ const UserDetails = () => {
       <div className="w-8 h-8 rounded-full bg-linear-to-br from-accet to-[#017474] flex items-center justify-center text-sm">
         {icon}
       </div>
-      <div className="flex flex-col justify-center items-start"><h2 className="text-[12px] text-white font-heading font-bold uppercase tracking-widest">{title}</h2>
-      <h2 className="text-[10px] text-white font-tamil font-bold uppercase tracking-widest">{tamil}</h2>
+      <div className="flex flex-col justify-center items-start">
+        <h2 className="text-[12px] text-white font-heading font-bold uppercase tracking-wide">
+          {title}
+        </h2>
       </div>
       <div className="flex-1 h-px bg-linear-to-r from-accet/50 to-transparent" />
     </div>
@@ -119,54 +165,70 @@ const UserDetails = () => {
   return (
     <div className="container mx-auto">
       <div className="w-[90%] mx-auto min-h-screen relative flex flex-col py-4">
-        
         {/* Header */}
         <div className="flex justify-center items-start pt-2 sticky top-0 bg-linear-to-b from-black via-black to-transparent pb-4 z-10">
           <div className="text-center">
             <h1 className="text-[20px] font-heading uppercase font-black tracking-wide leading-6 text-transparent bg-linear-to-r from-accet to-[#017474] bg-clip-text">
-              Voter Registration
+              {t("header.title")}
             </h1>
             <p className="text-[8px] font-medium text-white/40 font-body ">
-              Fill your details to participate in the opinion poll
+              {t("header.subtitle")}
             </p>
           </div>
         </div>
 
         {/* Form Container - Scrollable */}
-        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto pb-32 pt-4">
-          
+        <form
+          onSubmit={handleSubmit}
+          className="flex-1 overflow-y-auto pb-32 pt-4"
+        >
           {/* ==================== PERSONAL DETAILS ==================== */}
-          <SectionTitle icon={<HiMiniUser  className="text-gray-900 "/>} title="Personal Details" tamil='வாக்காளர் விவரங்கள்'/>
+          <SectionTitle
+            icon={<HiMiniUser className="text-gray-900 " />}
+            title={t("sections.personal")}
+          />
 
           {/* Name Input */}
-          <div className="relative group mb-4">
+          <div className="relative group mb-6">
             <div className="absolute inset-0 bg-linear-to-r from-accet to-[#017474] rounded-2xl blur opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
-            <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg px-4 py-1.5 group-hover:border-accet/30 transition-colors">
-              <label className="text-[10px] font-bold text-accet font-heading uppercase tracking-widest">
-                Full Name / <span className="font-tamil">முழுப் பெயர்</span>
+              <label className="text-[10px] font-bold text-accet font-heading uppercase tracking-wide mb-2 block px-1">
+                {t("labels.fullName")}
               </label>
+            <div className="relative bg-black/5 backdrop-blur-sm border border-white/20  px-4 py-1.5 group-hover:border-accet/30 transition-colors">
               <input
                 type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                placeholder="Enter your full name"
-                className="w-full bg-transparent text-white font-medium text-[12px] capitalize outline-none placeholder:text-white/30"
+                placeholder={t("placeholders.fullName")}
+                className="w-full bg-transparent text-white font-body font-medium text-[12px] capitalize outline-none placeholder:text-white/30"
                 required
               />
             </div>
           </div>
 
           {/* Gender Selection */}
-          <div className="mb-4">
-            <label className="text-[10px] font-bold  text-accet font-heading uppercase tracking-widest mb-3 block px-1">
-              Gender / <span className="font-tamil">பாலினம்</span>  
+          <div className="mb-6">
+            <label className="text-[10px] font-bold  text-accet font-heading uppercase tracking-wide mb-2 block px-1">
+              {t("labels.gender")}
             </label>
             <div className="grid grid-cols-3 gap-2">
               {[
-                { value: "male", label: "Male", icon: "https://ik.imagekit.io/saransk03/Voting%20Poll/man.png" },
-                { value: "female", label: "Female", icon: "https://ik.imagekit.io/saransk03/Voting%20Poll/businesswoman.png" },
-                { value: "other", label: "Other", icon: "https://ik.imagekit.io/saransk03/Voting%20Poll/transition.png" },
+                {
+                  value: "male",
+                  label: t("options.genders.male"),
+                  icon: "https://ik.imagekit.io/saransk03/Voting%20Poll/man.png",
+                },
+                {
+                  value: "female",
+                  label: t("options.genders.female"),
+                  icon: "https://ik.imagekit.io/saransk03/Voting%20Poll/businesswoman.png",
+                },
+                {
+                  value: "other",
+                  label: t("options.genders.other"),
+                  icon: "https://ik.imagekit.io/saransk03/Voting%20Poll/transition.png",
+                },
               ].map((gender) => (
                 <label key={gender.value} className="cursor-pointer">
                   <input
@@ -177,13 +239,13 @@ const UserDetails = () => {
                     className="sr-only"
                   />
                   <div
-                    className={`p-3 rounded-lg border text-center transition-all flex flex-col justify-center gap-1 items-center duration-300 ${
+                    className={`p-3  border text-center backdrop-blur-xl transition-all flex flex-col justify-center gap-1 items-center duration-300 ${
                       formData.gender === gender.value
                         ? "bg-linear-to-br from-accet/20 to-[#017474]/20 border-accet text-white shadow-lg shadow-accet/20"
-                        : "bg-white/5 border-white/10 text-white/50 hover:border-white/30"
+                        : "bg-black/5 border-white/20 text-white/50 hover:border-white/30"
                     }`}
                   >
-                    <img src={gender.icon} alt={gender.label} className="w-6"/>
+                    <img src={gender.icon} alt={gender.label} className="w-6" />
                     <span className="text-[9px] font-heading uppercase tracking-widest">
                       {gender.label}
                     </span>
@@ -194,9 +256,9 @@ const UserDetails = () => {
           </div>
 
           {/* Age Range Selection */}
-          <div className="mb-4">
-            <label className="text-[10px] font-bold text-accet font-heading uppercase tracking-widest mb-3 block px-1">
-              Age Group / <span className="font-tamil">வயது</span>
+          <div className="mb-6">
+            <label className="text-[10px] font-bold text-accet font-heading uppercase tracking-wide mb-2 block px-1">
+             {t("labels.ageGroup")}
             </label>
             <div className="grid grid-cols-3 gap-2">
               {ageRanges.map((age) => (
@@ -209,10 +271,10 @@ const UserDetails = () => {
                     className="sr-only"
                   />
                   <div
-                    className={`py-1.5 px-2 rounded-lg border text-center transition-all duration-300 ${
+                    className={`py-1.5 px-2  border backdrop-blur-xl text-center transition-all duration-300 ${
                       formData.age === age.value
                         ? "bg-linear-to-br from-accet/20 to-[#017474]/20 border-accet text-white shadow-lg shadow-accet/20"
-                        : "bg-white/5 border-white/10 text-white/50 hover:border-white/30"
+                        : "bg-black/5 border-white/20 text-white/50 hover:border-white/30"
                     }`}
                   >
                     <span className="text-[11px] font-heading font-bold tracking-wide">
@@ -224,51 +286,48 @@ const UserDetails = () => {
             </div>
             {/* Age Warning */}
             {formData.age === "below-18" && (
-              <div className="mt-3 bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-3 flex items-center gap-1">
+              <div className="mt-3 bg-yellow-500/10 border border-yellow-500/30 p-3 flex items-center gap-1">
                 <span className="text-[10px]">⚠️</span>
                 <p className="text-[9px] text-yellow-400 font-body">
-                  You must be 18+ to vote, but can participate in this poll.
+                  {t("messages.ageWarning")}
                 </p>
               </div>
             )}
           </div>
 
           {/* ==================== LOCATION & BACKGROUND ==================== */}
-          <SectionTitle icon={<MdLocationOn className="text-gray-900 "/>} title="Location & Background" tamil='இடம் & பின்னணி'/>
+          <SectionTitle
+            icon={<MdLocationOn className="text-gray-900 " />}
+            title={t("sections.location")}
+            
+          />
 
           {/* District Selection */}
-          <div className="relative group mb-4">
+          <div className="relative group mb-6">
             <div className="absolute inset-0 bg-linear-to-r from-accet to-[#017474] rounded-lg blur opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
-            <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg px-4 py-1 group-hover:border-accet/30 transition-colors">
-              <label className="text-[10px] font-bold text-accet font-heading uppercase tracking-widest">
-                District / <span className="font-tamil">மாவட்டம்</span>
+              <label className="text-[10px] font-bold text-accet font-heading uppercase tracking-wide mb-2 block px-1">
+                {t("labels.district")}
               </label>
-              <select
-                name="district"
-                value={formData.district}
-                onChange={handleChange}
-                className="w-full bg-transparent text-white font-body text-[12px] p-2 outline-none appearance-none cursor-pointer"
-                required
+            <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded px-4 py-1 group-hover:border-accet/30 transition-colors">
+              
+              <div 
+                onClick={() => setShowMap(true)}
+                className="w-full bg-transparent text-white font-body text-[12px] py-2 cursor-pointer flex justify-between items-center"
               >
-                <option value="" className="bg-gray-900 p-3">Select your district</option>
-                {districts.map((district) => (
-                  <option key={district} value={district} className="bg-gray-900 p-3">
-                    {district}
-                  </option>
-                ))}
-              </select>
-              <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                <svg className="w-5 h-5 text-accet/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
+                <span className={formData.district ? "text-white" : "text-white/30"}>
+                    {formData.district || t("placeholders.district")}
+                </span>
+                <MdLocationOn className="text-accet text-lg animate-pulse"/>
               </div>
+              <input type="hidden" name="district" value={formData.district} required />
             </div>
           </div>
 
+
           {/* Religion Selection */}
-          <div className="mb-4">
-            <label className="text-[10px] font-bold text-accet font-heading uppercase tracking-widest mb-3 block px-1">
-              Religion / <span className="font-tamil">மதம்</span>
+          <div className="mb-6">
+            <label className="text-[10px] font-bold text-accet font-heading uppercase tracking-widest mb-2 block px-1">
+              {t("labels.religion")}
             </label>
             <div className="grid grid-cols-4 gap-2">
               {religions.map((religion) => (
@@ -281,14 +340,14 @@ const UserDetails = () => {
                     className="sr-only"
                   />
                   <div
-                    className={`py-3 px-1 rounded-lg border text-center transition-all duration-300 ${
+                    className={`py-3 px-1 rounded border backdrop-blur-xl text-center transition-all duration-300 ${
                       formData.religion === religion.value
                         ? "bg-linear-to-br from-accet/20 to-[#017474]/20 border-accet text-white shadow-lg shadow-accet/20"
                         : "bg-white/5 border-white/10 text-white/50 hover:border-white/30"
                     }`}
                   >
                     <div className="text-lg">{religion.icon}</div>
-                    <span className="text-[7px]  font-heading uppercase tracking-widest font-bold">
+                    <span className="text-[8px]  font-heading uppercase tracking-widest font-bold">
                       {religion.label}
                     </span>
                   </div>
@@ -298,9 +357,9 @@ const UserDetails = () => {
           </div>
 
           {/* Mother Tongue Selection */}
-          <div className="mb-4">
-            <label className="text-[10px] font-bold text-accet font-heading uppercase tracking-widest mb-3 block px-1">
-              Mother Tongue / <span className="font-tamil">தாய் மொழி</span>
+          <div className="mb-6">
+            <label className="text-[10px] font-bold text-accet font-heading uppercase tracking-widest mb-2 block px-1">
+              {t("labels.motherTongue")}
             </label>
             <div className="grid grid-cols-3 gap-2">
               {motherTongues.map((lang) => (
@@ -313,7 +372,7 @@ const UserDetails = () => {
                     className="sr-only"
                   />
                   <div
-                    className={`py-1.5 px-2 rounded-lg border text-center transition-all duration-300 ${
+                    className={`py-1.5 px-2 rounded border backdrop-blur-xl text-center transition-all duration-300 ${
                       formData.motherTongue === lang.value
                         ? "bg-linear-to-br from-accet/20 to-[#017474]/20 border-accet text-white shadow-lg shadow-accet/20"
                         : "bg-white/5 border-white/10 text-white/50 hover:border-white/30"
@@ -330,23 +389,28 @@ const UserDetails = () => {
           </div>
 
           {/* ==================== CONTACT & COMMUNITY ==================== */}
-          <SectionTitle icon={<HiPhone className="text-gray-900 "/>} title="Contact & Community" tamil='தொடர்பு & சமூகம்'/>
+          <SectionTitle
+            icon={<HiPhone className="text-gray-900 " />}
+            title={t("sections.contact")}
+          />
 
           {/* Phone Number */}
-          <div className="relative group mb-4">
+          <div className="relative group mb-6">
             <div className="absolute inset-0 bg-linear-to-r from-accet to-[#017474] rounded-2xl blur opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
-            <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg px-4 py-1.5 group-hover:border-accet/30 transition-colors">
-              <label className="text-[10px] text-accet font-bold font-heading uppercase tracking-widest">
-                Phone Number / <span className="font-tamil">தொலைபேசி எண்</span>
-              </label>
-              <div className="flex items-center mt-2 gap-2">
-                <span className="text-white/50 font-body text-[12px] py-1 rounded-lg">+91</span>
+            <label className="text-[10px] text-accet font-bold font-heading uppercase tracking-widest mb-2 block px-1">
+               {t("labels.phoneNumber")}
+            </label>
+            <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded px-4 py-1.5 group-hover:border-accet/30 transition-colors"> 
+              <div className="flex items-center gap-2">
+                <span className="text-white/50 font-body text-[12px] py-1 rounded">
+                  +91
+                </span>
                 <input
                   type="tel"
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  placeholder="Enter 10-digit number"
+                  placeholder={t("placeholders.phone")}
                   maxLength="10"
                   className="flex-1 bg-transparent text-white font-body text-[12px] outline-none placeholder:text-white/30 tracking-wider"
                   required
@@ -356,16 +420,24 @@ const UserDetails = () => {
               {formData.phone && (
                 <div className=" flex items-center gap-2">
                   <div className="flex-1 h-0.5 bg-white/10 rounded-full overflow-hidden">
-                    <div 
+                    <div
                       className={`h-full transition-all duration-300 ${
-                        formData.phone.length === 10 ? "bg-green-500" : "bg-accet"
+                        formData.phone.length === 10
+                          ? "bg-green-500"
+                          : "bg-accet"
                       }`}
-                      style={{ width: `${(formData.phone.length / 10) * 100}%` }}
+                      style={{
+                        width: `${(formData.phone.length / 10) * 100}%`,
+                      }}
                     />
                   </div>
-                  <span className={`text-[8px] font-body ${
-                    formData.phone.length === 10 ? "text-green-400" : "text-white/40"
-                  }`}>
+                  <span
+                    className={`text-[8px] font-body ${
+                      formData.phone.length === 10
+                        ? "text-green-400"
+                        : "text-white/40"
+                    }`}
+                  >
                     {formData.phone.length}/10
                   </span>
                 </div>
@@ -373,11 +445,10 @@ const UserDetails = () => {
             </div>
           </div>
 
-
           {/* Community Selection */}
-          <div className="mb-4">
-            <label className="text-[10px] font-bold text-accet font-heading uppercase tracking-widest mb-3 block px-1">
-              Community / <span className="font-tamil">சமூகம்</span>
+          <div className="mb-6">
+            <label className="text-[10px] font-bold text-accet font-heading uppercase tracking-widest mb-2 block px-1">
+              {t("labels.community")}
             </label>
             <div className="grid grid-cols-3 gap-2">
               {communities.map((community) => (
@@ -390,7 +461,7 @@ const UserDetails = () => {
                     className="sr-only"
                   />
                   <div
-                    className={`py-2 px-2 rounded-lg border text-center flex flex-col justify-center items-center transition-all duration-300 ${
+                    className={`py-2 px-2 min-h-16 backdrop-blur-xl rounded border text-center flex flex-col justify-center items-center transition-all duration-300 ${
                       formData.community === community.value
                         ? "bg-linear-to-br from-accet/20 to-[#017474]/20 border-accet text-white shadow-lg shadow-accet/20"
                         : "bg-white/5 border-white/10 text-white/50 hover:border-white/30"
@@ -408,33 +479,35 @@ const UserDetails = () => {
             </div>
           </div>
 
-
           {/* Caste Input */}
-          <div className="relative group mb-4">
+          <div className="relative group mb-6">
             <div className="absolute inset-0 bg-linear-to-r from-accet to-[#017474] rounded-lg blur opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
-            <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg px-4 py-1.5 group-hover:border-accet/30 transition-colors">
-              <label className="text-[10px] font-bold text-accet font-heading uppercase tracking-widest">
-                Caste / <span className="font-tamil">சாதி</span>
+              <label className="text-[10px] font-bold text-accet font-heading uppercase tracking-widest mb-2 block px-1">
+                {t("labels.caste")}
               </label>
+            <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded px-4 py-1.5 group-hover:border-accet/30 transition-colors">
               <input
                 type="text"
                 name="caste"
                 value={formData.caste}
                 onChange={handleChange}
-                placeholder="Enter your caste"
-                className="w-full bg-transparent text-white font-body text-[12px] mt-2 outline-none placeholder:text-white/30"
+                placeholder={t("placeholders.caste")}
+                className="w-full bg-transparent text-white font-body text-[12px] outline-none placeholder:text-white/30"
                 required
               />
             </div>
           </div>
 
           {/* ==================== ID VERIFICATION ==================== */}
-          <SectionTitle icon={<MdVerifiedUser className="text-gray-900 "/>} title="ID Verification" tamil='அடையாள சரிபார்ப்பு'/>
+          <SectionTitle
+            icon={<MdVerifiedUser className="text-gray-900 " />}
+            title={t("sections.idVerification")}
+          />
 
           {/* ID Type Selection */}
-          <div className="mb-4">
-            <label className="text-[10px] font-bold text-accet font-heading uppercase tracking-widest mb-3 block px-1">
-              Select ID Type / <span className="font-tamil">ஐடி வகையைத் தேர்ந்தெடுக்கவும்</span>
+          <div className="mb-6">
+            <label className="text-[10px] font-bold text-accet font-heading uppercase tracking-widest mb-2 block px-1">
+              {t("labels.idType")}
             </label>
             <div className="grid grid-cols-2 gap-3">
               {idTypes.map((id) => (
@@ -445,18 +518,18 @@ const UserDetails = () => {
                     value={id.value}
                     onChange={(e) => {
                       handleChange(e);
-                      setFormData(prev => ({ ...prev, idNumber: "" }));
+                      setFormData((prev) => ({ ...prev, idNumber: "" }));
                     }}
                     className="sr-only"
                   />
                   <div
-                    className={`p-4 rounded-lg border text-center transition-all flex flex-col justify-center gap-1 items-center duration-300 ${
+                    className={`p-4 rounded border backdrop-blur-xl text-center transition-all flex flex-col justify-center gap-1 items-center duration-300 ${
                       formData.idType === id.value
                         ? "bg-linear-to-br from-accet/20 to-[#017474]/20 border-accet text-white shadow-lg shadow-accet/20"
                         : "bg-white/5 border-white/10 text-white/50 hover:border-white/30"
                     }`}
                   >
-                    <img src={id.icon} alt={id.label} className="w-6"/>
+                    <img src={id.icon} alt={id.label} className="w-6" />
                     <span className="text-[9px] font-bold font-heading uppercase tracking-widest">
                       {id.label}
                     </span>
@@ -470,36 +543,55 @@ const UserDetails = () => {
           {formData.idType && (
             <div className="relative group mb-4 animate-fadeIn">
               <div className="absolute inset-0 bg-linear-to-r from-accet to-[#017474] rounded-lg blur opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
-              <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg px-4 py-2 group-hover:border-accet/30 transition-colors">
-                <label className="text-[10px] text-accet font-heading uppercase tracking-widest flex items-center gap-2">
-                  {formData.idType === "aadhar" ? "Aadhar Number" : "Driving License Number"}
+              <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded px-4 py-2 group-hover:border-accet/30 transition-colors">
+                <label className="text-[10px] text-accet font-heading uppercase tracking-wide flex items-center gap-2">
+                  {formData.idType === "aadhar"
+                    ? t("labels.aadharNumber")
+                    : t("labels.dlNumber")}
                 </label>
                 <input
                   type="text"
                   name="idNumber"
                   value={formData.idNumber}
                   onChange={handleChange}
-                  placeholder={idTypes.find(id => id.value === formData.idType)?.placeholder}
-                  maxLength={idTypes.find(id => id.value === formData.idType)?.maxLength}
+                  placeholder={
+                    idTypes.find((id) => id.value === formData.idType)
+                      ?.placeholder
+                  }
+                  maxLength={
+                    idTypes.find((id) => id.value === formData.idType)
+                      ?.maxLength
+                  }
                   className="w-full bg-transparent text-white font-body text-[12px] mt-2 outline-none placeholder:text-white/30 tracking-wide uppercase"
                   required
                 />
                 {/* ID validation indicator */}
                 <div className="mt-1 flex items-center gap-2">
                   <div className="flex-1 h-0.5 bg-white/10 rounded-full overflow-hidden">
-                    <div 
+                    <div
                       className={`h-full transition-all duration-300 ${
-                        formData.idNumber.length === idTypes.find(id => id.value === formData.idType)?.maxLength
-                          ? "bg-green-500" 
+                        formData.idNumber.length ===
+                        idTypes.find((id) => id.value === formData.idType)
+                          ?.maxLength
+                          ? "bg-green-500"
                           : "bg-accet"
                       }`}
-                      style={{ 
-                        width: `${(formData.idNumber.length / idTypes.find(id => id.value === formData.idType)?.maxLength) * 100}%` 
+                      style={{
+                        width: `${
+                          (formData.idNumber.length /
+                            idTypes.find((id) => id.value === formData.idType)
+                              ?.maxLength) *
+                          100
+                        }%`,
                       }}
                     />
                   </div>
                   <span className="text-[8px] text-white/40 font-body">
-                    {formData.idNumber.length}/{idTypes.find(id => id.value === formData.idType)?.maxLength}
+                    {formData.idNumber.length}/
+                    {
+                      idTypes.find((id) => id.value === formData.idType)
+                        ?.maxLength
+                    }
                   </span>
                 </div>
               </div>
@@ -507,39 +599,55 @@ const UserDetails = () => {
           )}
 
           {/* Privacy Notice */}
-          <div className="bg-linear-to-r from-green-500/10 to-emerald-500/10 border border-green-500/30 rounded-lg p-4 mt-6">
+          <div className="bg-linear-to-r from-green-500/10 to-emerald-500/10 backdrop-blur-xl border border-green-500/30 rounded p-4 mt-6">
             <div className="flex items-start gap-3">
-              <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center shrink-0">
-                <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              <div className="w-8 h-8 rounded-full backdrop-blur-xl bg-green-500/20 flex items-center justify-center shrink-0">
+                <svg
+                  className="w-4 h-4 text-green-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                  />
                 </svg>
               </div>
               <div>
-                <p className="text-[10px] text-green-400 font-heading uppercase tracking-wider">Your Data is Secure</p>
+                <p className="text-[10px] text-green-400 font-heading uppercase tracking-wider">
+                  {t("messages.dataSecure")}
+                </p>
                 <p className="text-[8px] text-white/50 font-body mt-1 leading-relaxed">
-                  All information is encrypted and used only for this survey. We never share personal data with third parties.
+                 {t("messages.encryptionNotice")}
                 </p>
               </div>
             </div>
           </div>
-
         </form>
 
         {/* Fixed Bottom Button */}
         <div className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black via-black to-transparent pt-6 pb-4 px-[4px]">
-          
           {/* Agreement Checkbox */}
-          <div className="flex items-start gap-2 mb-3 px-3">
-            <input 
-              type="checkbox" 
+          <div className="flex items-start gap-2 mb-2 px-3">
+            <input
+              type="checkbox"
               checked={agreed}
               onChange={(e) => setAgreed(e.target.checked)}
-              className="mt-1 accent-accet w-4 h-4 cursor-pointer" 
+              className="mt-1 accent-accet w-4 h-4 cursor-pointer"
             />
             <p className="text-[9px] text-white/50 font-body leading-relaxed">
-              I confirm my details are accurate & I agree to the{" "}
-              <span className="text-accet underline cursor-pointer">Privacy Policy</span> and{" "}
-              <span className="text-accet underline cursor-pointer">Terms of Service</span>.
+              {t("messages.agreement")}{' '}
+              <span className="text-accet underline cursor-pointer">
+                {t("messages.privacyPolicy")}
+              </span>{" "}
+              and{" "}
+              <span className="text-accet underline cursor-pointer">
+                {t("messages.terms")}
+              </span>
+              .
             </p>
           </div>
 
@@ -548,24 +656,37 @@ const UserDetails = () => {
             type="submit"
             onClick={handleSubmit}
             disabled={!isFormValid()}
-            className={`w-full font-heading text-[12px] tracking-wider py-3.5 rounded-full uppercase font-bold transition-all duration-300 flex items-center justify-center gap-2 ${
+            className={`w-full font-heading text-[12px] tracking-wider py-3.5 rounded uppercase font-bold transition-all duration-300 flex items-center justify-center gap-2 ${
               isFormValid()
-                ? "text-white bg-linear-to-r from-accet to-[#017474] hover:shadow-lg hover:shadow-accet/30 active:scale-[0.98]"
+                ? "text-white bg-linear-to-r from-accet/40 to-accet/60 hover:shadow-lg hover:shadow-accet/30 active:scale-[0.98]"
                 : "text-white/30 bg-white/5 border border-white/10 cursor-not-allowed"
             }`}
           >
             {isFormValid() ? (
               <>
-                <span>Proceed to Vote</span>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                <span>{t("messages.proceed")}</span>
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 7l5 5m0 0l-5 5m5-5H6"
+                  />
                 </svg>
               </>
             ) : (
               <>
-                <span>Complete All Fields</span>
+                <span>{t("messages.completeFields")}</span>
                 <span className="text-[10px] opacity-50">
-                  ({Object.values(formData).filter(v => v).length + (agreed ? 1 : 0)}/12)
+                  (
+                  {Object.values(formData).filter((v) => v).length +
+                    (agreed ? 1 : 0)}
+                  /12)
                 </span>
               </>
             )}
@@ -573,8 +694,12 @@ const UserDetails = () => {
 
           {/* Quick Links */}
           <div className="text-[7px] tracking-widest text-white/40 flex justify-between items-center mt-2 px-4 font-heading font-light">
-            <p className="hover:text-white cursor-pointer transition-colors">Privacy Policy</p>
-            <p className="hover:text-white cursor-pointer transition-colors">Terms & Conditions</p>
+            <p className="hover:text-white cursor-pointer transition-colors">
+              {t("messages.privacyPolicy")}
+            </p>
+            <p className="hover:text-white cursor-pointer transition-colors">
+              {t("messages.terms")}
+            </p>
           </div>
         </div>
 
@@ -582,15 +707,23 @@ const UserDetails = () => {
         <div className="fixed top-20 left-0 h-40 w-40 bg-accet/20 rounded-full blur-3xl -z-10 pointer-events-none" />
         <div className="fixed bottom-40 right-0 h-32 w-32 bg-[#017474]/30 rounded-full blur-3xl -z-10 pointer-events-none" />
         <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-60 w-60 bg-blue-500/10 rounded-full blur-3xl -z-10 pointer-events-none" />
+
+        {showMap && (
+          <DistrictMapPicker
+            currentDistrict={formData.district}
+            onClose={() => setShowMap(false)}
+            onConfirm={(selectedDistrict) => {
+              setFormData({ ...formData, district: selectedDistrict });
+              setShowMap(false);
+            }}
+          />
+        )}
       </div>
     </div>
   );
 };
 
 export default UserDetails;
-
-
-
 
 // import { useState } from "react";
 
@@ -703,7 +836,7 @@ export default UserDetails;
 //   return (
 //     <div className="container mx-auto">
 //       <div className="w-[90%] mx-auto min-h-screen relative flex flex-col py-4">
-        
+
 //         {/* Header */}
 //         <div className="flex justify-center items-start pt-2">
 //           <div className="text-center">
@@ -759,11 +892,11 @@ export default UserDetails;
 //         {/* Form Container */}
 //         <div className="flex-1 overflow-y-auto pb-4">
 //           <form onSubmit={handleSubmit} className="w-full">
-            
+
 //             {/* ==================== STEP 1: Personal Details ==================== */}
 //             <div className={`transition-all duration-500 ${currentStep === 1 ? "block" : "hidden"}`}>
 //               <div className="space-y-4">
-                
+
 //                 {/* Name Input */}
 //                 <div className="relative group">
 //                   <div className="absolute inset-0 bg-gradient-to-r from-accet to-[#017474] rounded-2xl blur opacity-0 group-hover:opacity-25 transition-opacity duration-300" />
@@ -785,7 +918,7 @@ export default UserDetails;
 
 //                 {/* Gender Selection */}
 //                 <div className="relative">
-//                   <label className="text-[10px] text-accet font-heading uppercase tracking-widest mb-3 block flex items-center gap-2 px-1">
+//                   <label className="text-[10px] text-accet font-heading uppercase tracking-widest mb-2 block flex items-center gap-2 px-1">
 //                     <span>⚧️</span> Gender
 //                   </label>
 //                   <div className="grid grid-cols-3 gap-2">
@@ -822,7 +955,7 @@ export default UserDetails;
 
 //                 {/* Age Range Selection */}
 //                 <div className="relative">
-//                   <label className="text-[10px] text-accet font-heading uppercase tracking-widest mb-3 block flex items-center gap-2 px-1">
+//                   <label className="text-[10px] text-accet font-heading uppercase tracking-widest mb-2 block flex items-center gap-2 px-1">
 //                     <span>📅</span> Age Group
 //                   </label>
 //                   <div className="grid grid-cols-3 gap-2">
@@ -872,7 +1005,7 @@ export default UserDetails;
 //             {/* ==================== STEP 2: Background Details ==================== */}
 //             <div className={`transition-all duration-500 ${currentStep === 2 ? "block" : "hidden"}`}>
 //               <div className="space-y-4">
-                
+
 //                 {/* District Selection */}
 //                 <div className="relative group">
 //                   <div className="absolute inset-0 bg-gradient-to-r from-accet to-[#017474] rounded-2xl blur opacity-0 group-hover:opacity-25 transition-opacity duration-300" />
@@ -904,7 +1037,7 @@ export default UserDetails;
 
 //                 {/* Religion Selection */}
 //                 <div className="relative">
-//                   <label className="text-[10px] text-accet font-heading uppercase tracking-widest mb-3 block flex items-center gap-2 px-1">
+//                   <label className="text-[10px] text-accet font-heading uppercase tracking-widest mb-2 block flex items-center gap-2 px-1">
 //                     <span>🙏</span> Religion
 //                   </label>
 //                   <div className="grid grid-cols-4 gap-2">
@@ -937,7 +1070,7 @@ export default UserDetails;
 
 //                 {/* Mother Tongue Selection */}
 //                 <div className="relative">
-//                   <label className="text-[10px] text-accet font-heading uppercase tracking-widest mb-3 block flex items-center gap-2 px-1">
+//                   <label className="text-[10px] text-accet font-heading uppercase tracking-widest mb-2 block flex items-center gap-2 px-1">
 //                     <span>🗣️</span> Mother Tongue
 //                   </label>
 //                   <div className="grid grid-cols-3 gap-2">
@@ -1045,10 +1178,10 @@ export default UserDetails;
 //             {/* ==================== STEP 3: Verification ==================== */}
 //             <div className={`transition-all duration-500 ${currentStep === 3 ? "block" : "hidden"}`}>
 //               <div className="space-y-4">
-                
+
 //                 {/* ID Type Selection */}
 //                 <div className="relative">
-//                   <label className="text-[10px] text-accet font-heading uppercase tracking-widest mb-3 block flex items-center gap-2 px-1">
+//                   <label className="text-[10px] text-accet font-heading uppercase tracking-widest mb-2 block flex items-center gap-2 px-1">
 //                     <span>🪪</span> Select ID Type
 //                   </label>
 //                   <div className="grid grid-cols-2 gap-3">
@@ -1113,7 +1246,7 @@ export default UserDetails;
 
 //                 {/* Summary Card */}
 //                 <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-4 mt-4">
-//                   <h3 className="text-[11px] text-accet font-heading uppercase tracking-wider mb-3 flex items-center gap-2">
+//                   <h3 className="text-[11px] text-accet font-heading uppercase tracking-wider mb-2 flex items-center gap-2">
 //                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 //                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
 //                     </svg>
