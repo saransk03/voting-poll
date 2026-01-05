@@ -1,7 +1,7 @@
 const ta = {
    home: {
     nav: {
-      brand: "லூனய்",
+      brand: "லூனை",
       language: "தமிழ்"
     },
     statusBadge: "டிஜிட்டல் வாக்குப்பதிவு அமைப்பு • ஆன்லைனில்",
@@ -22,7 +22,7 @@ const ta = {
       votingText: "தொடங்கவும்"
     },
     footer: {
-      copyright: "© 2025 லூனய் சிஸ்டம்ஸ்",
+      copyright: "© 2025 லூனை சிஸ்டம்ஸ்",
       protocol: "நெறிமுறை: v2.5.1",
       status: "பாதுகாக்கப்பட்டது"
     }
