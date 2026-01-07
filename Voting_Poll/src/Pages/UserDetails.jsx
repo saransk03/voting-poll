@@ -143,7 +143,7 @@ const DigitalIDCard = ({ data, t, isExpanded, onToggle }) => {
                 }`}>
                   {data.age || "AGE"}
                 </span>
-                <span className="text-[6px] lg:text-[10px] px-1.5 lg:px-3 lg:py-1 py-0.5 font-heading bg-white/10 text-white/80 tracking-wider uppercase">
+                <span className="text-[6px] lg:text-[10px] px-2 lg:px-3 lg:py-1 py-1 font-heading bg-white/10 text-white/80 tracking-wider uppercase">
                   {data.gender || "GENDER"}
                 </span>
               </div>
@@ -364,13 +364,13 @@ const UserDetails = () => {
               <label className="text-[8px] lg:text-[12px] font-bold text-accet font-heading uppercase tracking-wide mb-1.5 md:mb-2 block md:px-1">
                 {t("labels.fullName")}
               </label>
-              <div className="relative bg-shade flex justify-center items-center border border-white/20 md:px-4 py-2 md:py-3 px-3 group-hover:border-accet/30 transition-colors">
+              <div className="relative bg-shade flex justify-center items-center border border-white/20 md:px-4 py-2.5 md:py-3 px-3 group-hover:border-accet/30 transition-colors">
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => handleChange("name", e.target.value)}
                   placeholder={t("placeholders.fullName")}
-                  className="w-full bg-transparent text-white font-body text-[11px] lg:text-[15px] capitalize outline-none placeholder:text-white/30"
+                  className="w-full bg-transparent text-white font-body text-[12px] lg:text-[15px] capitalize outline-none placeholder:text-white/30"
                 />
               </div>
             </div>
@@ -385,7 +385,7 @@ const UserDetails = () => {
                   <button
                     key={gender.value}
                     onClick={() => handleChange("gender", gender.value)}
-                    className={`py-2 px-2 md:p-4 border backdrop-blur-xl text-center transition-all flex  justify-center gap-2 items-center duration-300 ${
+                    className={`py-2.5 px-2 md:p-4 border backdrop-blur-xl text-center transition-all flex  justify-center gap-2 items-center duration-300 ${
                       formData.gender === gender.value
                         ? "bg-gradient-to-br from-accet/20 to-indigo-500/20 border-accet text-white shadow-lg shadow-accet/20"
                         : "bg-shade border-white/20 text-white hover:border-white/30"
@@ -410,7 +410,7 @@ const UserDetails = () => {
                   <button
                     key={age.value}
                     onClick={() => handleChange("age", age.value)}
-                    className={`py-2 md:py-3 px-2 border backdrop-blur-xl text-center flex justify-center items-center transition-all duration-300 ${
+                    className={`py-2.5 md:py-3 px-2 border backdrop-blur-xl text-center flex justify-center items-center transition-all duration-300 ${
                       formData.age === age.value
                         ? "bg-gradient-to-br from-accet/20 to-indigo-500/20 border-accet text-white shadow-lg shadow-accet/20"
                         : "bg-shade border-white/20 text-white hover:border-white/30"
@@ -451,11 +451,11 @@ const UserDetails = () => {
               </label>
               <div
                 onClick={() => { Click(); setShowMap(true); }}
-                className={`relative bg-shade border md:px-4 py-2 md:py-4 px-3 cursor-pointer transition-all flex justify-between items-center ${
+                className={`relative bg-shade border md:px-4 py-2.5 md:py-4 px-3 cursor-pointer transition-all flex justify-between items-center ${
                   formData.district ? "border-accet/50" : "border-white/20 hover:border-white/30"
                 }`}
               >
-                <span className={formData.district ? "text-white font-medium text-[10px] lg:text-[14px]" : "text-white/30 text-[9px] lg:text-[14px]"}>
+                <span className={formData.district ? "text-white font-medium text-[11px] lg:text-[14px]" : "text-white/30 text-[10px] lg:text-[14px]"}>
                   {formData.district || t("placeholders.district")}
                 </span>
                 <MdLocationOn className="text-accet text-[14px] lg:text-xl animate-pulse" />
@@ -472,14 +472,14 @@ const UserDetails = () => {
                   <button
                     key={religion.value}
                     onClick={() => handleChange("religion", religion.value)}
-                    className={`py-2 md:py-3 px-2 border backdrop-blur-xl flex flex-col gap-2 justify-center items-center text-center transition-all duration-300 ${
+                    className={`py-2.5 md:py-3 px-2 border backdrop-blur-xl flex flex-col gap-2 justify-center items-center text-center transition-all duration-300 ${
                       formData.religion === religion.value
-                        ? "bg-gradient-to-br from-accet/20 to-indigo-500/20 border-accet text-white shadow-lg shadow-accet/20"
+                        ? "bg-linear-to-br from-accet/20 to-indigo-500/20 border-accet text-white shadow-lg shadow-accet/20"
                         : "bg-shade border-white/20 text-white hover:border-white/30"
                     }`}
                   >
                     {/* <img src={religion.icon} alt={religion.label} className="w-6 lg:w-8" /> */}
-                    <span className="text-[9px] lg:text-[10px] font-heading uppercase tracking-widest">
+                    <span className="text-[8px] lg:text-[10px] font-heading uppercase tracking-widest">
                       {religion.label}
                     </span>
                   </button>
@@ -497,7 +497,7 @@ const UserDetails = () => {
                   <button
                     key={lang.value}
                     onClick={() => handleChange("motherTongue", lang.value)}
-                    className={`py-2 md:py-3 px-2 border backdrop-blur-xl flex justify-center items-center text-center transition-all duration-300 ${
+                    className={`py-2.5 md:py-3 px-2 border backdrop-blur-xl flex justify-center items-center text-center transition-all duration-300 ${
                       formData.motherTongue === lang.value
                         ? "bg-gradient-to-br from-accet/20 to-indigo-500/20 border-accet text-white shadow-lg shadow-accet/20"
                         : "bg-shade border-white/20 text-white hover:border-white/30"
@@ -529,7 +529,7 @@ const UserDetails = () => {
               <label className="text-[8px] lg:text-[12px] text-accet font-bold font-heading uppercase tracking-widest mb-1.5 md:mb-2 block md:px-1">
                 {t("labels.phoneNumber")}
               </label>
-              <div className="relative bg-shade border border-white/20 md:px-4 py-1.5 md:py-3 px-2 group-hover:border-accet/30 transition-colors">
+              <div className="relative bg-shade border border-white/20 md:px-4 py-2.5 md:py-3 px-2 group-hover:border-accet/30 transition-colors">
                 <div className="flex items-center gap-1 md:gap-3">
                   <span className="text-white/60 font-body text-sm py-1 px-1 md:px-2 text-[10px] md:text-[13px]">
                     +91
@@ -573,7 +573,7 @@ const UserDetails = () => {
                   <button
                     key={community.value}
                     onClick={() => handleChange("community", community.value)}
-                    className={`py-2 md:py-3 px-2 md:min-h-[70px] backdrop-blur-xl border text-center flex flex-col justify-center items-center transition-all duration-300 ${
+                    className={`py-2.5 md:py-3 px-2 md:min-h-[70px] backdrop-blur-xl border text-center flex flex-col justify-center items-center transition-all duration-300 ${
                       formData.community === community.value
                         ? "bg-gradient-to-br from-accet/20 to-indigo-500/20 border-accet text-white shadow-lg shadow-accet/20"
                         : "bg-shade border-white/20 text-white hover:border-white/30"
@@ -595,7 +595,7 @@ const UserDetails = () => {
               <label className="text-[8px] lg:text-[12px] font-bold text-accet font-heading uppercase tracking-widest mb-1.5 md:mb-2 block md:px-1">
                 {t("labels.caste")}
               </label>
-              <div className="relative bg-shade flex justify-center items-center border border-white/20 md:px-4 py-2 md:py-3 px-3 group-hover:border-accet/30 transition-colors">
+              <div className="relative bg-shade flex justify-center items-center border border-white/20 md:px-4 py-2.5 md:py-3 px-3 group-hover:border-accet/30 transition-colors">
                 <input
                   type="text"
                   value={formData.caste}
@@ -631,7 +631,7 @@ const UserDetails = () => {
                       handleChange("idType", id.value);
                       setFormData(prev => ({ ...prev, idNumber: "" }));
                     }}
-                    className={`py-2 md:p-5 border backdrop-blur-xl text-center transition-all flex flex-col justify-center gap-2 items-center duration-300 ${
+                    className={`py-2.5 md:p-5 border backdrop-blur-xl text-center transition-all flex flex-col justify-center gap-2 items-center duration-300 ${
                       formData.idType === id.value
                         ? "bg-gradient-to-br from-accet/20 to-indigo-500/20 border-accet text-white shadow-lg shadow-accet/20"
                         : "bg-shade border-white/20 text-white hover:border-white/30"
@@ -652,7 +652,7 @@ const UserDetails = () => {
                 <label className="text-[9px] lg:text-[12px] text-accet font-bold font-heading uppercase tracking-wide mb-1 md:mb-2 block md:px-1">
                   {formData.idType === "aadhar" ? t("labels.aadharNumber") : t("labels.dlNumber")}
                 </label>
-                <div className="relative bg-shade border border-white/20 md:px-4 py-1.5 md:py-3 px-3 group-hover:border-accet/30 transition-colors">
+                <div className="relative bg-shade border border-white/20 md:px-4 py-2 md:py-3 px-3 group-hover:border-accet/30 transition-colors">
                   <input
                     type="text"
                     value={formData.idNumber}
@@ -707,7 +707,7 @@ const UserDetails = () => {
                 agreed ? "bg-accet/10 border-accet/50" : "bg-shade border-white/20"
               }`}
             >
-              <div className={`md:w-5 md:h-5 w-4 h-4 rounded border-2 flex items-center justify-center shrink-0 mt-0.5 transition-all ${
+              <div className={`w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 mt-0.5 transition-all ${
                 agreed ? "bg-accet border-accet" : "border-white/30"
               }`}>
                 {agreed && <MdCheck className="text-black text-sm" />}
@@ -778,7 +778,7 @@ const UserDetails = () => {
               <div className="flex justify-between items-center mt-3 md:mt-8 pt-3 md:pt-6 border-t border-white/10">
                 <button
                   onClick={handleBack}
-                  className={`flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 text-[10px] lg:text-[12px] uppercase font-heading font-bold tracking-widest transition-all ${
+                  className={`flex items-center gap-2 px-4 md:px-6 py-2.5 md:py-3 text-[10px] lg:text-[12px] uppercase font-heading font-bold tracking-widest transition-all ${
                     step === 1 ? "opacity-0 pointer-events-none" : "text-white/50 hover:text-white"
                   }`}
                 >
@@ -789,7 +789,7 @@ const UserDetails = () => {
                   <button
                     onClick={handleNext}
                     disabled={!isStepValid()}
-                    className={`flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 font-heading text-[10px] lg:text-[12px] tracking-wider uppercase font-bold transition-all duration-300 ${
+                    className={`flex items-center gap-2 px-4 md:px-6 py-2.5 md:py-3 font-heading text-[10px] lg:text-[12px] tracking-wider uppercase font-bold transition-all duration-300 ${
                       isStepValid()
                         ? "bg-gradient-to-r from-accet/80 to-accet text-white hover:shadow-lg hover:shadow-accet/30"
                         : "bg-white/5 text-white/30 cursor-not-allowed"
@@ -801,7 +801,7 @@ const UserDetails = () => {
                   <button
                     onClick={handleSubmit}
                     disabled={!isStepValid() || isSubmitting}
-                    className={`flex items-center gap-2 md:px-8 px-4 md:py-3 py-1.5 font-heading text-[11px] lg:text-[12px] tracking-wider uppercase font-bold transition-all duration-300 ${
+                    className={`flex items-center gap-2 md:px-8 px-4 md:py-3 py-2.5 font-heading text-[11px] lg:text-[12px] tracking-wider uppercase font-bold transition-all duration-300 ${
                       isStepValid() && !isSubmitting
                         ? "bg-gradient-to-r from-green-600 to-emerald-500 text-white hover:shadow-lg hover:shadow-green-500/30"
                         : "bg-white/5 text-white/30 cursor-not-allowed"
