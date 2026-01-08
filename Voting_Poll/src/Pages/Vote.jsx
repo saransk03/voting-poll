@@ -126,7 +126,7 @@ const Vote = () => {
 
 
   return (
-    <div className="h-dvh bg-black relative overflow-hidden">
+    <div className="h-dvh bg-black relative">
       {/* Animated Background Elements */}
       <DigitalGlobeBackground />
       

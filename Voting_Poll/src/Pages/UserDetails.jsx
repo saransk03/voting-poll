@@ -728,7 +728,7 @@ const UserDetails = () => {
   };
 
   return (
-    <div className="h-dvh lg:h-screen relative lg:overflow-hidden font-body">        
+    <div className="h-dvh lg:h-screen relative font-body">        
       <div className="container mx-auto px-4 py-3 md:py-6 relative z-10">
         {/* Header */}
         <div className="flex justify-center items-center mb-4 md:mb-6">
