@@ -1121,8 +1121,8 @@ const FormPage = () => {
             willChange: "transform, opacity",
           }}
         >
-          <div className="h-full w-full overflow-hidden lg:overflow-y-auto">
-            <div className="max-h-screen lg:min-h-screen py-8 lg:py-12">
+          <div className="h-dvh lg:h-full w-full overflow-hidden lg:overflow-y-auto">
+            <div className="lg:min-h-screen py-8 lg:py-12">
               <div className="container mx-auto px-4">
                 {/* Header */}
                 <div className="flex justify-center items-center mb-4 md:mb-6">
@@ -1240,7 +1240,7 @@ const FormPage = () => {
           <img
             src="https://res.cloudinary.com/dfgyjzm7c/image/upload/v1768047744/ChatGPT_Image_Jan_10_2026_05_39_30_PM_uilkls.png"
             alt="Hero Background"
-            className="w-full h-full object-fit"
+            className="w-full h-dvh object-fit"
           />
 
           {/* Dark Overlay */}

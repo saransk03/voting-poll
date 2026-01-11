@@ -113,7 +113,7 @@ const Home = () => {
       </nav>
 
       {/* Main Content */}
-      <div className="w-full mx-auto relative z-10 min-h-dvh flex flex-col justify-center">
+      <div className="w-full mx-auto relative z-10 h-[80dvh] lg:min-h-dvh flex flex-col justify-center">
         <section className="w-[93%] md:w-[80%] mx-auto  pt-24 pb-20 md:pb-32">
           {/* Floating Status Badge */}
           <div className=" animate-float flex justify-center md:inline-flex items-center gap-3 border border-accet/20 bg-accet/5 backdrop-blur-md rounded-full px-4 py-2 w-fit mb-8">
@@ -177,13 +177,13 @@ const Home = () => {
       </div>
 
       {/* video */}
-      <div className="w-full mx-auto bg-black/30 h-[90dvh] mb-32">
+      <div className="w-full mx-auto bg-black/30 h-full lg:h-[90dvh] mb-20 lg:mb-32">
         <div className="w-[90%] mx-auto grid grid-cols-1 lg:grid-cols-3 gap-3">
           <div className="w-[90%] mx-auto flex flex-col justify-start items-start">
-            <h1 className="font-heading text-[32px] md:text-2xl lg:text-3xl font-bold tracking-tight text-white mb-5 md:mb-6 leading-none drop-shadow-[0px_0px_10px] drop-shadow-accet/70">
+            <h1 className="font-heading text-[22px] md:text-2xl lg:text-3xl font-bold tracking-tight text-white mb-3 md:mb-6 leading-none drop-shadow-[0px_0px_10px] drop-shadow-accet/70">
               LUNAI
             </h1>
-            <p className="text-white text-[14px] font-tamil ">
+            <p className="text-white text-[10px] lg:text-[14px] font-tamil ">
               Printers in the 1500s scrambled the words from Cicero's "De
               Finibus Bonorum et Malorum'' after mixing the words in each
               sentence. The familiar "lorem ipsum dolor sit amet" text emerged
@@ -197,28 +197,28 @@ const Home = () => {
               standard dummy text that has become a fundamental tool in design
               and typography across generations.
             </p>
-            <div className="flex items-center gap-4 md:gap-6 mt-4 md:mt-5">
+            <div className="flex items-center gap-4 md:gap-6 mt-3 md:mt-5">
               <div className="text-start">
-                <p className="text-base md:text-lg lg:text-xl font-num font-bold text-white">
+                <p className="text-[12px] md:text-lg lg:text-xl font-num font-bold text-white">
                   Ra Origins
                 </p>
-                <p className="text-[8px] md:text-[9px] uppercase tracking-wider text-white/30 font-num">
+                <p className="text-[6px] md:text-[9px] uppercase tracking-wider text-white/30 font-num">
                   Founded
                 </p>
               </div>
               <div className="w-px h-6 md:h-8 bg-white/10" />
               <div className="text-end">
-                <p className="text-base md:text-lg lg:text-xl font-heading font-bold text-white">
+                <p className="text-[12px] md:text-lg lg:text-xl font-heading font-bold text-white">
                   234
                 </p>
-                <p className="text-[8px] md:text-[9px] uppercase tracking-wider text-white/30 font-heading">
+                <p className="text-[6px] md:text-[9px] uppercase tracking-wider text-white/30 font-heading">
                   Constituencies
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="h-[90dvh] bg-black flex flex-col justify-center items-center z-50 rounded-[30px] drop-shadow-[0px_0px_20px] drop-shadow-accet/30 overflow-hidden">
+          <div className="h-100 lg:h-[90dvh] bg-black flex flex-col justify-center items-center z-50 rounded-2xl lg:rounded-[30px] drop-shadow-[0px_0px_20px] drop-shadow-accet/30 overflow-hidden">
             <video 
             // ref={videoRef}
             autoPlay
@@ -229,27 +229,27 @@ const Home = () => {
             ></video>
           </div>
 
-          <div className="w-[90%] mx-auto flex flex-col justify-end items-end">
-            <div className="flex items-center gap-4 md:gap-6 mb-6">
+          <div className="w-[90%] mx-auto flex flex-col justify-end items-end mt-3 lg:mt-0">
+            <div className="flex items-center gap-4 md:gap-6 mb-3 md:mb-6">
               <div className="text-start">
-                <p className="text-base md:text-lg lg:text-xl font-num font-bold text-white">
+                <p className="text-[12px] md:text-lg lg:text-xl font-num font-bold text-white">
                   Ra Origins
                 </p>
-                <p className="text-[8px] md:text-[9px] uppercase tracking-wider text-white/30 font-num">
+                <p className="text-[6px] md:text-[9px] uppercase tracking-wider text-white/30 font-num">
                   Founded
                 </p>
               </div>
               <div className="w-px h-6 md:h-8 bg-white/10" />
               <div className="text-end">
-                <p className="text-base md:text-lg lg:text-xl font-heading font-bold text-white">
+                <p className="text-[12px] md:text-lg lg:text-xl font-heading font-bold text-white">
                   234
                 </p>
-                <p className="text-[8px] md:text-[9px] uppercase tracking-wider text-white/30 font-heading">
+                <p className="text-[6px] md:text-[9px] uppercase tracking-wider text-white/30 font-heading">
                   Constituencies
                 </p>
               </div>
             </div>
-            <p className="text-white text-end text-[14px] font-tamil mb-5">
+            <p className="text-white text-end text-[10px] lg:text-[14px] font-tamil mb-3 lg:mb-5">
               Printers in the 1500s scrambled the words from Cicero's "De
               Finibus Bonorum et Malorum'' after mixing the words in each
               sentence. The familiar "lorem ipsum dolor sit amet" text emerged
@@ -264,14 +264,16 @@ const Home = () => {
               and typography across generations.
             </p>
 
-            <h1 className="font-heading text-[32px] md:text-2xl lg:text-3xl font-bold tracking-tight text-white mb-5 md:mb-6 leading-none drop-shadow-[0px_0px_10px] drop-shadow-accet/70">
+            <h1 className="font-heading text-[22px] md:text-2xl lg:text-3xl font-bold tracking-tight text-white mb-5 md:mb-6 leading-none drop-shadow-[0px_0px_10px] drop-shadow-accet/70">
               LUNAI
             </h1>
           </div>
         </div>
       </div>
 
-      <section className="max-w-7xl mx-auto px-6 py-5 md:py-10">
+
+      {/* start button section */}
+      <div className="max-w-7xl mx-auto px-6 py-5 md:py-10">
         <div className="glass-panel p-6 md:p-16 rounded-sm border-t border-indigo-500/30 text-center relative overflow-hidden">
           {/* Decorative background elements */}
           <div className="absolute inset-0 z-0 opacity-80">
@@ -307,11 +309,11 @@ const Home = () => {
             </div>
           </div>
         </div>
-      </section>
+      </div>
 
       {/* Footer Bar */}
       <div className="backdrop-blur-md py-2 px-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between text-[10px] font-heading text-neutral-600">
+        <div className="max-w-7xl mx-auto flex items-center justify-between text-[8px] md:text-[10px] font-heading text-neutral-600">
           <span>{t("home.footer.copyright")}</span>
           <div className="flex items-center gap-4">
             <span className="hidden sm:inline">
