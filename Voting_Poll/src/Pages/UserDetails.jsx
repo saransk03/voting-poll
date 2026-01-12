@@ -17,17 +17,14 @@ import { useTranslation } from "react-i18next";
 import useSound from "use-sound";
 import click from "../assets/click2.wav";
 import scifi from "../assets/scifi.wav";
-
-// API Service Import
 import { registerVoter, getCasteList } from "../utils/service/api";
+import gsap from "gsap";
 
 // --- STEP INDICATOR ---
-const StepIndicator = ({ currentStep, totalSteps, steps }) => {
+const StepIndicator = ({ currentStep, totalSteps, steps, subtitle }) => {
   return (
     <div className="w-full mb-6">
-      {/* Desktop View */}
       <div className="hidden lg:flex items-center justify-between relative px-4">
-        {/* Progress Line */}
         <div className="absolute top-5 left-8 right-8 h-0.5 bg-white/10">
           <div
             className="h-full bg-gradient-to-r from-accet to-indigo-500 transition-all duration-500"
@@ -36,11 +33,9 @@ const StepIndicator = ({ currentStep, totalSteps, steps }) => {
             }}
           />
         </div>
-
         {steps.map((step, index) => {
           const isActive = index + 1 === currentStep;
           const isCompleted = index + 1 < currentStep;
-
           return (
             <div
               key={index}
@@ -49,16 +44,16 @@ const StepIndicator = ({ currentStep, totalSteps, steps }) => {
               <div
                 className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ${
                   isCompleted
-                    ? "bg-gradient-to-br from-accet to-indigo-500 text-gray-900 shadow-lg shadow-accet/30"
+                    ? "bg-linear-to-br from-accet to-indigo-500 text-gray-900 shadow-lg shadow-accet/30"
                     : isActive
-                    ? "bg-shade border-2 border-accet text-accet"
-                    : "bg-shade border border-white/20 text-white/40"
+                    ? "bg-accet border-2 border-accet text-accet"
+                    : "bg-shade border border-white/20 text-white/60"
                 }`}
               >
                 {isCompleted ? <MdCheck className="text-lg" /> : step.icon}
               </div>
               <span
-                className={`mt-2 text-[9px] uppercase tracking-widest font-heading ${
+                className={`mt-1 text-[9px] font-bold uppercase tracking-widest font-heading ${
                   isActive
                     ? "text-accet"
                     : isCompleted
@@ -73,18 +68,17 @@ const StepIndicator = ({ currentStep, totalSteps, steps }) => {
         })}
       </div>
 
-      {/* Mobile View */}
-      <div className="lg:hidden flex items-center justify-between px-2">
-        <div className="flex items-center gap-3">
-          <span className="text-3xl font-black text-accet font-heading">
+      <div className="lg:hidden flex items-center justify-between px-1">
+        <div className="flex items-center justify-center gap-3">
+          <span className="text-3xl font-black text-accet font-num">
             {String(currentStep).padStart(2, "0")}
           </span>
-          <div className="flex flex-col">
-            <span className="text-[9px] text-white/40 uppercase tracking-widest">
+          <div className="flex flex-col justify-center items-start">
+            <span className="text-[11px] text-white font-heading font-bold uppercase">
               Step {currentStep} of {totalSteps}
             </span>
-            <span className="text-[11px] text-white font-heading font-bold uppercase">
-              {steps[currentStep - 1]?.label}
+            <span className="text-[9px] text-white/40 uppercase tracking-widest font-mono">
+              {subtitle[currentStep - 1]?.label}
             </span>
           </div>
         </div>
@@ -103,196 +97,27 @@ const StepIndicator = ({ currentStep, totalSteps, steps }) => {
   );
 };
 
-// --- DIGITAL ID CARD PREVIEW ---
-const DigitalIDCard = ({ data, t, trackerId }) => {
-  const completionPercentage = () => {
-    const fields = [
-      "name",
-      "gender",
-      "age",
-      "district",
-      "religion",
-      "motherTongue",
-      "community",
-      "caste",
-      "phone",
-      "idType",
-      "idNumber",
-    ];
-    const filled = fields.filter((f) => data[f] && data[f].length > 0).length;
-    return Math.round((filled / fields.length) * 100);
-  };
-
-  return (
-    <div className="w-full transition-all duration-500 overflow-hidden max-h-100 opacity-100 mb-4 lg:max-h-[500px] lg:opacity-100 lg:mb-0">
-      <div className="w-full mx-auto lg:mx-0">
-        <div className="relative bg-accet/20 backdrop-blur-xs border border-white/10 rounded-xl p-4 md:p-5 overflow-hidden">
-          {/* Decorative Elements */}
-          <div className="absolute top-0 right-0 w-32 h-32 bg-accet/10 rounded-full blur-3xl -mr-10 -mt-10" />
-          <div className="absolute bottom-0 left-0 w-24 h-24 bg-indigo-500/10 rounded-full blur-2xl -ml-5 -mb-5" />
-
-          {/* Status Badge */}
-          <div className="absolute top-2 right-4 lg:top-3 lg:right-3 flex items-center gap-1.5">
-            <div
-              className={`w-1.5 h-1.5 rounded-full ${
-                completionPercentage() === 100 ? "bg-green-500" : "bg-accet"
-              } animate-pulse`}
-            />
-            <span className="text-[7px] lg:text-[10px] text-white/50 font-mono uppercase tracking-widest">
-              {completionPercentage() === 100 ? "Ready" : "Building"}
-            </span>
-          </div>
-
-          {/* Card Header */}
-          <div className="flex items-center gap-3 md:gap-4 mb-2 md:mb-4">
-            <div className="md:w-14 md:h-14 w-10 h-10 rounded-lg md:rounded-xl bg-linear-to-br from-indigo-900 to-indigo-900/20 border border-white/10 flex items-center justify-center text-[16px] md:text-2xl">
-              {data.gender === "male"
-                ? "👨🏻"
-                : data.gender === "female"
-                ? "👩🏻"
-                : "👤"}
-            </div>
-            <div className="flex-1 min-w-0">
-              <h3 className="text-white font-heading font-bold text-[11px] lg:text-base leading-tight uppercase truncate">
-                {data.name || t("placeholders.fullName")}
-              </h3>
-              <p className="text-indigo-400 text-[8px] lg:text-[12px] font-mono mt-1 tracking-wider">
-                {trackerId
-                  ? `TRACKER: ${trackerId}`
-                  : data.idNumber
-                  ? `ID: XXXX-XXXX-${data.idNumber.slice(-4).toUpperCase()}`
-                  : "ID: PENDING..."}
-              </p>
-              <div className="flex items-center gap-1.5 mt-1 md:mt-1.5">
-                <span
-                  className={`text-[6px] lg:text-[10px] px-2 lg:px-3 py-1 font-heading uppercase ${
-                    data.age === "below-18"
-                      ? "bg-yellow-500/20 text-yellow-400"
-                      : "bg-accet/50 text-white"
-                  }`}
-                >
-                  {data.age || "AGE"}
-                </span>
-                <span className="text-[6px] lg:text-[10px] px-2 lg:px-3 lg:py-1 py-1 font-heading bg-white/10 text-white/80 tracking-wider uppercase">
-                  {data.gender || "GENDER"}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Progress Bar */}
-          <div className="mb-3 lg:mb-5">
-            <div className="flex justify-between text-[7px] lg:text-[11px] font-heading uppercase tracking-widest text-white/40 mb-1">
-              <span>Profile</span>
-              <span className="text-accet font-bold">
-                {completionPercentage()}%
-              </span>
-            </div>
-            <div className="h-1 bg-white/10 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-accet to-indigo-500 transition-all duration-500"
-                style={{ width: `${completionPercentage()}%` }}
-              />
-            </div>
-          </div>
-
-          {/* Details Grid */}
-          <div className="grid grid-cols-2 gap-2 font-heading text-sm uppercase border-t border-white/20 pt-2 md:pt-3">
-            <div className="bg-white/5 p-2 lg:p-3">
-              <p className="text-[7px] lg:text-[10px] text-indigo-500 uppercase font-bold tracking-widest mb-0.5 flex items-center gap-1">
-                {t("labels.district")}
-              </p>
-              <p className="text-white text-[9px] lg:text-[12px] lg:mt-1 font-medium truncate">
-                {data.district || "---"}
-              </p>
-            </div>
-
-            <div className="bg-white/5 p-2 lg:p-3">
-              <p className="text-[7px] lg:text-[10px] text-indigo-500 uppercase font-bold tracking-widest mb-0.5">
-                {t("labels.religion")}
-              </p>
-              <p className="text-white text-[9px] lg:text-[12px] lg:mt-1 font-medium">
-                {data.religion || "---"}
-              </p>
-            </div>
-
-            <div className="bg-white/5 p-2 lg:p-3">
-              <p className="text-[7px] lg:text-[10px] text-indigo-500 uppercase font-bold tracking-widest mb-0.5">
-                {t("labels.motherTongue")}
-              </p>
-              <p className="text-white text-[9px] lg:text-[12px] lg:mt-1 font-medium">
-                {data.motherTongue || "---"}
-              </p>
-            </div>
-            <div className="bg-white/5 p-2 lg:p-3">
-              <p className="text-[7px] lg:text-[10px] text-indigo-500 uppercase font-bold tracking-widest mb-0.5">
-                {t("labels.community")}
-              </p>
-              <p className="text-white text-[9px] lg:text-[12px] lg:mt-1 font-medium uppercase">
-                {data.community || "---"}
-              </p>
-            </div>
-          </div>
-
-          {/* Footer */}
-          <div className="mt-2 pt-2 lg:mt-5 lg:pt-4 border-t border-white/10 flex justify-between items-center">
-            <div className="flex items-center gap-2 font-heading">
-              <MdFingerprint
-                className={`text-xl ${
-                  data.idNumber ? "text-accet" : "text-gray-600"
-                }`}
-              />
-              <div className="flex flex-col">
-                <span className="text-[6px] lg:text-[10px] tracking-widest text-white/50 uppercase">
-                  Status
-                </span>
-                <span
-                  className={`text-[7px] md:text-[9px] font-bold tracking-widest ${
-                    data.idNumber && data.phone?.length === 10
-                      ? "text-green-400"
-                      : "text-yellow-400"
-                  }`}
-                >
-                  {data.idNumber && data.phone?.length === 10
-                    ? "VERIFIED"
-                    : "PENDING"}
-                </span>
-              </div>
-            </div>
-            <div className="text-right">
-              <p className="text-[6px] lg:text-[10px] font-medium lg:leading-3 font-heading text-white/50 tracking-widest">
-                LUNAI
-              </p>
-              <p className="text-[7px] lg:text-[8px] text-white/50">
-                Digital Voting Online
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// --- SECTION TITLE COMPONENT ---
+// --- SECTION TITLE ---
 const SectionTitle = ({ icon, title, subtitle }) => (
   <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-6">
     <div className="md:w-10 md:h-10 w-8 h-8 rounded-full bg-gradient-to-br from-accet to-indigo-400 flex items-center justify-center shrink-0">
       {icon}
     </div>
     <div className="flex flex-col">
-      <h2 className="text-[10px] lg:text-base text-white font-heading font-bold uppercase tracking-wide">
+      <h2 className="text-[13px] lg:text-base text-white font-heading font-bold uppercase tracking-wide">
         {title}
       </h2>
       {subtitle && (
-        <p className="text-[8px] md:text-[10px] text-white/40">{subtitle}</p>
+        <p className="text-[8px] md:text-[10px] text-white/40 hidden lg:block">
+          {subtitle}
+        </p>
       )}
     </div>
     <div className="flex-1 w-full h-0.5 bg-linear-to-r from-accet/50 to-transparent rounded-full" />
   </div>
 );
 
-// caste input
+// --- SEARCHABLE SELECT ---
 const SearchableSelect = ({
   value,
   onChange,
@@ -302,26 +127,21 @@ const SearchableSelect = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [isSelected, setIsSelected] = useState(false);
   const [isCustomMode, setIsCustomMode] = useState(false);
   const dropdownRef = useRef(null);
   const inputRef = useRef(null);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsOpen(false);
-        if (!isSelected && !isCustomMode) {
-          setSearchTerm("");
-        }
+        if (!isCustomMode) setSearchTerm("");
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isSelected, isCustomMode]);
+  }, [isCustomMode]);
 
-  // Normalize options to handle both string and object formats
   const normalizedOptions = options.map((item) => {
     if (typeof item === "object" && item !== null) {
       return {
@@ -332,31 +152,18 @@ const SearchableSelect = ({
     return { value: item, label: item };
   });
 
-  // Filter options based on search term
   const filteredOptions = normalizedOptions.filter((option) =>
     option.label.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Check if current value exists in options
-  const isValueInOptions = normalizedOptions.some(
-    (option) =>
-      option.value.toLowerCase() === value?.toLowerCase() ||
-      option.label.toLowerCase() === value?.toLowerCase()
-  );
-
-  // Check if search term has exact match
   const hasExactMatch = normalizedOptions.some(
     (option) => option.label.toLowerCase() === searchTerm.toLowerCase()
   );
 
-  // Show "Other" option when searching and no exact match
   const showOtherOption = searchTerm.length >= 2 && !hasExactMatch;
 
-  // Get display value for input
   const getDisplayValue = () => {
-    if (isCustomMode || !isValueInOptions) {
-      return value || "";
-    }
+    if (isCustomMode) return value || "";
     const found = normalizedOptions.find(
       (opt) =>
         opt.value.toLowerCase() === value?.toLowerCase() ||
@@ -379,15 +186,8 @@ const SearchableSelect = ({
   const handleInputChange = (e) => {
     const newValue = e.target.value;
     setSearchTerm(newValue);
-
-    if (isCustomMode) {
-      onChange(newValue);
-      setIsOpen(true);
-    }
-
-    if (!isOpen && !isCustomMode) {
-      setIsOpen(true);
-    }
+    if (isCustomMode) onChange(newValue);
+    if (!isOpen && !isCustomMode) setIsOpen(true);
   };
 
   const handleInputFocus = () => {
@@ -402,20 +202,10 @@ const SearchableSelect = ({
     setSearchTerm("");
     setIsCustomMode(false);
     setIsOpen(false);
-    inputRef.current?.focus();
-  };
-
-  const handleBackToSearch = () => {
-    setIsCustomMode(false);
-    setSearchTerm("");
-    onChange("");
-    setIsOpen(true);
-    setTimeout(() => inputRef.current?.focus(), 100);
   };
 
   return (
     <div ref={dropdownRef} className="relative w-full">
-      {/* Input Field */}
       <div
         className={`relative bg-shade border ${
           isOpen
@@ -427,125 +217,8 @@ const SearchableSelect = ({
         onClick={() => inputRef.current?.focus()}
       >
         <div className="flex items-center gap-2">
-          {/* Icon - Changes based on mode */}
-          {isCustomMode ? (
-            <div className="w-5 h-5 rounded-full bg-indigo-500/30 flex items-center justify-center shrink-0">
-              <svg
-                className="w-3 h-3 text-indigo-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                />
-              </svg>
-            </div>
-          ) : (
-            <svg
-              className="w-4 h-4 text-white/40 shrink-0"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-          )}
-
-          <input
-            ref={inputRef}
-            type="text"
-            value={
-              isCustomMode ? value : isOpen ? searchTerm : getDisplayValue()
-            }
-            onChange={handleInputChange}
-            onFocus={handleInputFocus}
-            placeholder={isCustomMode ? "Type your caste name..." : placeholder}
-            className="w-full bg-transparent text-white font-body text-[11px] lg:text-[14px] outline-none placeholder:text-white/30 capitalize"
-          />
-
-          {/* Action Icons */}
-          <div className="flex items-center gap-1 shrink-0">
-            {/* Back to search button (in custom mode) */}
-            {isCustomMode && (
-              <button
-                onClick={handleBackToSearch}
-                className="p-1 hover:bg-white/10 rounded transition-colors"
-                title="Back to search"
-              >
-                <svg
-                  className="w-3.5 h-3.5 text-white/50"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-              </button>
-            )}
-
-            {/* Clear button */}
-            {(value || searchTerm) && (
-              <button
-                onClick={handleClear}
-                className="p-1 hover:bg-white/10 rounded transition-colors"
-              >
-                <svg
-                  className="w-3 h-3 text-white/50"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            )}
-
-            {/* Dropdown arrow (not in custom mode) */}
-            {!isCustomMode && (
-              <svg
-                className={`w-4 h-4 text-white/40 transition-transform duration-200 ${
-                  isOpen ? "rotate-180" : ""
-                }`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Helper text for custom mode */}
-      {isCustomMode && (
-        <p className="text-[8px] lg:text-[10px] text-indigo-400/70 mt-1.5 px-1 flex items-center gap-1">
           <svg
-            className="w-3 h-3"
+            className="w-4 h-4 text-white/40 shrink-0"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -554,152 +227,88 @@ const SearchableSelect = ({
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth={2}
-              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
             />
           </svg>
-          Typing Other Caste. Click search icon to go back to list.
-        </p>
-      )}
+          <input
+            ref={inputRef}
+            type="text"
+            value={
+              isCustomMode ? value : isOpen ? searchTerm : getDisplayValue()
+            }
+            onChange={handleInputChange}
+            onFocus={handleInputFocus}
+            placeholder={placeholder}
+            className="w-full bg-transparent text-white font-body text-[11px] lg:text-[14px] outline-none placeholder:text-white/30 capitalize"
+          />
+          {(value || searchTerm) && (
+            <button
+              onClick={handleClear}
+              className="p-1 hover:bg-white/10 rounded"
+            >
+              <svg
+                className="w-3 h-3 text-white/50"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          )}
+        </div>
+      </div>
 
-      {/* Dropdown */}
       {isOpen && !isCustomMode && (
-        <div className="absolute z-50 w-full mt-1 bg-shade border border-white/20 rounded-lg shadow-xl max-h-60 overflow-hidden animate-fadeIn">
+        <div className="absolute z-50 w-full mt-1 bg-shade border border-white/20 rounded-lg shadow-xl max-h-60 overflow-hidden">
           {loading ? (
             <div className="flex items-center justify-center py-8">
               <div className="w-5 h-5 border-2 border-accet/30 border-t-accet rounded-full animate-spin" />
             </div>
           ) : (
-            <div className="overflow-y-auto max-h-60 custom-scrollbar">
-              {/* Filtered Options */}
-              {filteredOptions.length > 0 &&
-                filteredOptions.map((option, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleSelect(option.value)}
-                    className={`w-full text-left px-4 py-2.5 text-[11px] lg:text-[13px] font-body transition-colors ${
-                      option.value.toLowerCase() === value?.toLowerCase()
-                        ? "bg-accet/20 text-accet"
-                        : "text-white hover:bg-white/10"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="capitalize">{option.label}</span>
-                      {option.value.toLowerCase() === value?.toLowerCase() && (
-                        <svg
-                          className="w-4 h-4 text-accet"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M5 13l4 4L19 7"
-                          />
-                        </svg>
-                      )}
-                    </div>
-                  </button>
-                ))}
-
-              {/* "Other" Option */}
+            <div className="overflow-y-auto max-h-60">
+              {filteredOptions.map((option, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleSelect(option.value)}
+                  className={`w-full text-left px-4 py-2.5 text-[11px] lg:text-[13px] font-body transition-colors ${
+                    option.value.toLowerCase() === value?.toLowerCase()
+                      ? "bg-accet/20 text-accet"
+                      : "text-white hover:bg-white/10"
+                  }`}
+                >
+                  <span className="capitalize">{option.label}</span>
+                </button>
+              ))}
               {showOtherOption && (
                 <button
                   onClick={() => handleSelect(searchTerm, true)}
-                  className="w-full text-left px-4 py-2 text-[11px] lg:text-[13px] font-body transition-colors text-white hover:bg-indigo-500/10 bg-indigo-500/5"
+                  className="w-full text-left px-4 py-2 text-[11px] font-body text-white hover:bg-indigo-500/10 bg-indigo-500/5"
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <p className="font-tamil font-normal text-white capitalize tracking-wide text-[10px] lg:text-[14px]">
-                          Others - "{searchTerm}"
-                        </p>
-                      </div>
-                      <p className="text-white/50 text-[8px] lg:text-[10px]">
-                        Not in list? Add as Others
-                      </p>
-                    </div>
-                    <svg
-                      className="w-4 h-4 text-indigo-400 shrink-0"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                  </div>
+                  Others - "{searchTerm}"
                 </button>
               )}
-
-              {/* No results message */}
               {filteredOptions.length === 0 && !showOtherOption && (
-                <div className="py-6 text-center">
-                  <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-3">
-                    <svg
-                      className="w-6 h-6 text-white/30"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                  </div>
-                  <p className="text-white/40 text-[11px] lg:text-[13px]">
-                    No results found
-                  </p>
-                  <p className="text-white/30 text-[9px] lg:text-[11px] mt-1">
-                    Type at least 2 characters to add custom
-                  </p>
-                </div>
-              )}
-
-              {/* Empty state - show all or type to search */}
-              {searchTerm.length === 0 && filteredOptions.length === 0 && (
-                <div className="py-6 text-center">
-                  <p className="text-white/40 text-[11px] lg:text-[13px]">
-                    Start typing to search...
-                  </p>
+                <div className="py-6 text-center text-white/40 text-[11px]">
+                  No results found
                 </div>
               )}
             </div>
           )}
         </div>
       )}
-
-      {/* Custom Scrollbar Styles */}
-      <style jsx>{`
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: rgba(255, 255, 255, 0.05);
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(255, 255, 255, 0.2);
-          border-radius: 3px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: rgba(255, 255, 255, 0.3);
-        }
-      `}</style>
     </div>
   );
 };
 
-// --- ERROR MODAL COMPONENT ---
+// --- MODALS ---
 const ErrorModal = ({ message, onClose }) => (
-  <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+  <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[100] p-4">
     <div className="bg-shade border border-red-500/30 rounded-xl p-6 max-w-md w-full">
       <div className="flex items-center gap-3 mb-4">
         <div className="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center">
@@ -712,7 +321,7 @@ const ErrorModal = ({ message, onClose }) => (
       <p className="text-white/70 text-sm mb-6">{message}</p>
       <button
         onClick={onClose}
-        className="w-full py-3 bg-red-500/20 border border-red-500/50 text-red-400 font-heading uppercase tracking-widest text-sm hover:bg-red-500/30 transition-colors"
+        className="w-full py-3 bg-red-500/20 border border-red-500/50 text-red-400 font-heading uppercase tracking-widest text-sm"
       >
         Try Again
       </button>
@@ -720,9 +329,8 @@ const ErrorModal = ({ message, onClose }) => (
   </div>
 );
 
-// --- SUCCESS MODAL COMPONENT ---
 const SuccessModal = ({ trackerId, onContinue }) => (
-  <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+  <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[100] p-4">
     <div className="bg-shade border border-green-500/30 rounded-xl p-6 max-w-md w-full text-center">
       <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-4">
         <MdCheck className="text-green-500 text-3xl" />
@@ -730,9 +338,6 @@ const SuccessModal = ({ trackerId, onContinue }) => (
       <h3 className="text-white font-heading font-bold text-xl uppercase tracking-wide mb-2">
         Registration Successful!
       </h3>
-      <p className="text-white/70 text-sm mb-4">
-        Your voter ID has been created successfully.
-      </p>
       <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4 mb-6">
         <p className="text-[10px] text-green-400 uppercase tracking-widest mb-1">
           Your Tracker ID
@@ -740,13 +345,10 @@ const SuccessModal = ({ trackerId, onContinue }) => (
         <p className="text-white font-mono text-lg font-bold tracking-wider">
           {trackerId}
         </p>
-        <p className="text-[9px] text-white/50 mt-2">
-          Save this ID to track your vote
-        </p>
       </div>
       <button
         onClick={onContinue}
-        className="w-full py-3 bg-gradient-to-r from-green-600 to-emerald-500 text-white font-heading uppercase tracking-widest text-sm hover:shadow-lg hover:shadow-green-500/30 transition-all"
+        className="w-full py-3 bg-gradient-to-r from-green-600 to-emerald-500 text-white font-heading uppercase tracking-widest text-sm"
       >
         Proceed to Vote
       </button>
@@ -754,21 +356,155 @@ const SuccessModal = ({ trackerId, onContinue }) => (
   </div>
 );
 
-// --- MAIN COMPONENT ---
+// --- ✅ CLICK INDICATOR (Changed from ScrollIndicator) ---
+const ClickIndicator = ({ onClick, isAnimating }) => (
+  <div className="absolute bottom-16 md:bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center z-30">
+    <button
+      onClick={onClick}
+      disabled={isAnimating}
+      className="group cursor-pointer disabled:cursor-not-allowed flex flex-col items-center gap-5"
+    >
+      {/* Minimal text */}
+      <span className="text-white/50 text-[8px] md:text-[10px] uppercase tracking-[0.4em] font-heading group-hover:text-white/80 transition-colors duration-500">
+        Enter
+      </span>
+
+      {/* Animated Line with Circle */}
+      <div className="relative flex flex-col items-center">
+        {/* Top line */}
+        <div className="w-[1px] h-8 bg-gradient-to-b from-transparent via-white/20 to-white/40 group-hover:via-accet/30 group-hover:to-accet/60 transition-colors duration-500" />
+        
+        {/* Center circle */}
+        <div className="relative my-2">
+          {/* Outer ring */}
+          <div className="absolute -inset-2 rounded-full border border-white/10 group-hover:border-accet/30 group-hover:scale-125 transition-all duration-500" />
+          
+          {/* Main circle */}
+          <div className="w-10 h-10 rounded-full border border-white/20 group-hover:border-accet/50 bg-black/30 backdrop-blur-sm flex items-center justify-center transition-all duration-300 group-hover:bg-accet/10 group-active:scale-90">
+            {isAnimating ? (
+              <div className="w-4 h-4 border border-accet/30 border-t-accet rounded-full animate-spin" />
+            ) : (
+              <div className="w-2 h-2 rounded-full bg-white/40 group-hover:bg-accet group-hover:shadow-lg group-hover:shadow-accet/50 transition-all duration-300" />
+            )}
+          </div>
+        </div>
+
+        {/* Bottom animated dots */}
+        <div className="flex flex-col items-center gap-1 mt-1">
+          {[0, 1, 2].map((i) => (
+            <div
+              key={i}
+              className="w-[2px] h-[2px] rounded-full bg-white/20 group-hover:bg-accet/60 transition-all duration-300 animate-pulse"
+              style={{ 
+                animationDelay: `${i * 200}ms`,
+                opacity: 1 - (i * 0.2)
+              }}
+            />
+          ))}
+        </div>
+      </div>
+    </button>
+  </div>
+);
+
+
+// hexagonal button
+// const ClickIndicator = ({ onClick, isAnimating }) => (
+//   <div className="absolute bottom-16 md:bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center z-30">
+//     <button
+//       onClick={onClick}
+//       disabled={isAnimating}
+//       className="group cursor-pointer disabled:cursor-not-allowed flex flex-col items-center gap-3"
+//     >
+//       <div className="relative">
+//         <svg className="absolute -inset-4 w-24 h-24 md:w-28 md:h-28 opacity-0 group-hover:opacity-100 transition-opacity duration-500" viewBox="0 0 100 100">
+//           <polygon 
+//             points="50,2 95,25 95,75 50,98 5,75 5,25" 
+//             fill="none" 
+//             stroke="url(#hexGlow)" 
+//             strokeWidth="1"
+//             className="animate-pulse"
+//           />
+//           <defs>
+//             <linearGradient id="hexGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+//               <stop offset="0%" stopColor="#00D4FF" stopOpacity="0.3"/>
+//               <stop offset="100%" stopColor="#6366F1" stopOpacity="0.3"/>
+//             </linearGradient>
+//           </defs>
+//         </svg>
+
+//         <svg className="w-16 h-16 md:w-20 md:h-20 group-hover:scale-105 transition-transform duration-300" viewBox="0 0 100 100">
+//           <polygon 
+//             points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" 
+//             fill="rgba(0,0,0,0.5)"
+//             stroke="url(#hexBorder)" 
+//             strokeWidth="2"
+//             className="group-hover:fill-[rgba(0,212,255,0.1)] transition-all duration-300"
+//           />
+//           <defs>
+//             <linearGradient id="hexBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+//               <stop offset="0%" stopColor="rgba(255,255,255,0.2)"/>
+//               <stop offset="50%" stopColor="rgba(0,212,255,0.5)"/>
+//               <stop offset="100%" stopColor="rgba(99,102,241,0.5)"/>
+//             </linearGradient>
+//           </defs>
+//         </svg>
+
+//         <div className="absolute inset-0 flex items-center justify-center">
+//           {isAnimating ? (
+//             <div className="w-5 h-5 border-2 border-accet/30 border-t-accet rounded-full animate-spin" />
+//           ) : (
+//             <svg 
+//               className="w-5 h-5 md:w-6 md:h-6 text-white/70 group-hover:text-accet transition-colors duration-300"
+//               fill="currentColor" 
+//               viewBox="0 0 24 24"
+//             >
+//               <path d="M8 5v14l11-7z"/>
+//             </svg>
+//           )}
+//         </div>
+//       </div>
+
+//       <div className="flex flex-col items-center">
+//         <span className="text-[8px] md:text-[9px] text-white/30 uppercase tracking-[0.4em] font-mono">
+//           initialize
+//         </span>
+//         <span className="text-[10px] md:text-[11px] text-white/60 uppercase tracking-widest font-heading group-hover:text-accet transition-colors duration-300">
+//           Continue
+//         </span>
+//       </div>
+//     </button>
+//   </div>
+// );
+
+
+
+// ========================================
+// ✅ MAIN COMPONENT
+// ========================================
 const UserDetails = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-
   const [Click] = useSound(click, { volume: 0.2 });
   const [playClick] = useSound(scifi, { volume: 0.3 });
 
-  // State
+  // ✅ GSAP Refs
+  const mainContainerRef = useRef(null);
+  const imageLayerRef = useRef(null);
+  const formLayerRef = useRef(null);
+  const animationTlRef = useRef(null); // ✅ NEW: Timeline ref for button click
+
+  const [fixedHeight, setFixedHeight] = useState(null);
+
+  // States
   const [step, setStep] = useState(1);
   const totalSteps = 4;
   const [showMap, setShowMap] = useState(false);
   const [agreed, setAgreed] = useState(false);
   const [direction, setDirection] = useState("next");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isRevealed, setIsRevealed] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false); // ✅ NEW: Animation state
 
   // API States
   const [casteList, setCasteList] = useState([]);
@@ -792,14 +528,90 @@ const UserDetails = () => {
     idNumber: "",
   });
 
-  // Fetch Caste List on Mount
+  useEffect(() => {
+    const initialHeight = window.innerHeight;
+    setFixedHeight(initialHeight);
+
+    const handleOrientationChange = () => {
+      setTimeout(() => {
+        setFixedHeight(window.innerHeight);
+      }, 100);
+    };
+
+    window.addEventListener("orientationchange", handleOrientationChange);
+
+    return () => {
+      window.removeEventListener("orientationchange", handleOrientationChange);
+    };
+  }, []);
+
+  // ✅ GSAP ANIMATION - Button Click Triggered (No ScrollTrigger)
+  useEffect(() => {
+    if (!fixedHeight) return;
+
+    const ctx = gsap.context(() => {
+      // ✅ Create timeline but DON'T play automatically (paused: true)
+      const tl = gsap.timeline({
+        paused: true,
+        onStart: () => {
+          setIsAnimating(true);
+        },
+        onComplete: () => {
+          setIsRevealed(true);
+          setIsAnimating(false);
+        },
+      });
+
+      // ✅ IMAGE: Zoom IN + Fade OUT
+      tl.to(
+        imageLayerRef.current,
+        {
+          scale: 2.5,
+          y: -300,
+          opacity: 0,
+          duration: 1.2,
+          ease: "power2.inOut",
+        },
+        0
+      );
+
+      // ✅ FORM: Scale UP from center + Fade IN (from behind)
+      tl.fromTo(
+        formLayerRef.current,
+        {
+          scale: 0.2,
+          opacity: 0,
+        },
+        {
+          scale: 1,
+          opacity: 1,
+          duration: 1,
+          ease: "power2.out",
+        },
+        0.4
+      );
+
+      // ✅ Store timeline in ref for button click access
+      animationTlRef.current = tl;
+    }, mainContainerRef);
+
+    return () => ctx.revert();
+  }, [fixedHeight]);
+
+  // ✅ NEW: Handle Continue Button Click
+  const handleContinueClick = () => {
+    if (animationTlRef.current && !isAnimating && !isRevealed) {
+      playClick(); // Play sound
+      animationTlRef.current.play();
+    }
+  };
+
+  // Fetch Caste List
   useEffect(() => {
     const fetchCasteList = async () => {
       setCasteLoading(true);
       const result = await getCasteList();
-      if (result.success) {
-        setCasteList(result.data);
-      }
+      if (result.success) setCasteList(result.data);
       setCasteLoading(false);
     };
     fetchCasteList();
@@ -824,6 +636,12 @@ const UserDetails = () => {
       label: t("sections.idVerification") || "Verify",
     },
   ];
+  const subtitle = [
+    { label: "Establish your identity" || t("sections.location") },
+    { label: "Map your background" },
+    { label: "Contact & Community details" },
+    { label: "Final verification step" },
+  ];
 
   const ageRanges = [
     { value: "below-18", label: "Below 18" },
@@ -835,77 +653,31 @@ const UserDetails = () => {
   ];
 
   const genders = [
-    {
-      value: "male",
-      label: t("options.genders.male") || "Male",
-      icon: "https://res.cloudinary.com/dfgyjzm7c/image/upload/v1767355063/male_wum4dl.png",
-    },
-    {
-      value: "female",
-      label: t("options.genders.female") || "Female",
-      icon: "https://res.cloudinary.com/dfgyjzm7c/image/upload/v1767355028/femenine_ewcoiz.png",
-    },
-    {
-      value: "other",
-      label: t("options.genders.other") || "Other",
-      icon: "https://res.cloudinary.com/dfgyjzm7c/image/upload/v1767355233/transgender_vlfmqt.png",
-    },
+    { value: "male", label: t("options.genders.male") || "Male" },
+    { value: "female", label: t("options.genders.female") || "Female" },
+    { value: "other", label: t("options.genders.other") || "Other" },
   ];
 
   const religions = [
-    {
-      value: "hindu",
-      label: t("options.religions.hindu") || "Hindu",
-      icon: "https://res.cloudinary.com/dfgyjzm7c/image/upload/v1767355558/hindu_smq0lm.png",
-    },
+    { value: "hindu", label: t("options.religions.hindu") || "Hindu" },
     {
       value: "christian",
       label: t("options.religions.christian") || "Christian",
-      icon: "https://res.cloudinary.com/dfgyjzm7c/image/upload/v1767355558/cross_d17hfp.png",
     },
-    {
-      value: "muslim",
-      label: t("options.religions.muslim") || "Muslim",
-      icon: "https://res.cloudinary.com/dfgyjzm7c/image/upload/v1767355557/moon_av8avh.png",
-    },
-    {
-      value: "others",
-      label: t("options.religions.others") || "Others",
-      icon: "https://res.cloudinary.com/dfgyjzm7c/image/upload/v1767356101/hands_1_lqthfz.png",
-    },
+    { value: "muslim", label: t("options.religions.muslim") || "Muslim" },
+    { value: "others", label: t("options.religions.others") || "Others" },
   ];
 
   const motherTongues = [
-    {
-      value: "tamil",
-      label: t("options.languages.tamil") || "Tamil",
-      icon: "த",
-    },
-    {
-      value: "telugu",
-      label: t("options.languages.telugu") || "Telugu",
-      icon: "తె",
-    },
+    { value: "tamil", label: t("options.languages.tamil") || "Tamil" },
+    { value: "telugu", label: t("options.languages.telugu") || "Telugu" },
     {
       value: "malayalam",
       label: t("options.languages.malayalam") || "Malayalam",
-      icon: "മ",
     },
-    {
-      value: "kannada",
-      label: t("options.languages.kannada") || "Kannada",
-      icon: "ಕ",
-    },
-    {
-      value: "hindi",
-      label: t("options.languages.hindi") || "Hindi",
-      icon: "हि",
-    },
-    {
-      value: "others",
-      label: t("options.languages.others") || "Others",
-      icon: "+",
-    },
+    { value: "kannada", label: t("options.languages.kannada") || "Kannada" },
+    { value: "hindi", label: t("options.languages.hindi") || "Hindi" },
+    { value: "others", label: t("options.languages.others") || "Others" },
   ];
 
   const communities = [
@@ -941,15 +713,13 @@ const UserDetails = () => {
     {
       value: "aadhar",
       label: t("options.ids.aadhar") || "Aadhar Card",
-      icon: "https://ik.imagekit.io/saransk03/Voting%20Poll/employee-card.png",
-      placeholder: t("placeholders.aadhar") || "XXXX XXXX XXXX",
+      placeholder: "XXXX XXXX XXXX",
       maxLength: 12,
     },
     {
       value: "driving",
       label: t("options.ids.driving") || "Driving License",
-      icon: "https://ik.imagekit.io/saransk03/Voting%20Poll/driving-licence.png",
-      placeholder: t("placeholders.dl") || "TN-00-0000-0000000",
+      placeholder: "TN-00-0000-0000000",
       maxLength: 16,
     },
   ];
@@ -982,7 +752,6 @@ const UserDetails = () => {
       playClick();
       setDirection("next");
       setStep((prev) => prev + 1);
-      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
@@ -990,19 +759,15 @@ const UserDetails = () => {
     Click();
     setDirection("back");
     setStep((prev) => prev - 1);
-    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // SUBMIT HANDLER - API INTEGRATION
   const handleSubmit = async () => {
     if (!isStepValid()) return;
-
     setIsSubmitting(true);
     setError(null);
     playClick();
 
     try {
-      // Prepare data for backend
       const registrationData = {
         idType: formData.idType,
         idNumber: formData.idNumber,
@@ -1017,19 +782,10 @@ const UserDetails = () => {
 
       const result = await registerVoter(registrationData);
 
-      console.log(result);
-
       if (result.success) {
-        // ✅ FIXED: Correct localStorage syntax
-        const trackerId = result.data.tracker_id;
-        setTrackerId(trackerId);
-
-        // Save tracker_id to localStorage (KEY, VALUE format)
-        localStorage.setItem("tracker_id", trackerId);
-
-        console.log("Tracker ID saved:", trackerId);
-        console.log("localStorage check:", localStorage.getItem("tracker_id"));
-
+        const id = result.data.tracker_id;
+        setTrackerId(id);
+        localStorage.setItem("tracker_id", id);
         setShowSuccess(true);
       } else {
         setError(result.error);
@@ -1045,18 +801,16 @@ const UserDetails = () => {
 
   const handleSuccessContinue = () => {
     setShowSuccess(false);
-
     localStorage.setItem("voter_status", "registered");
     navigate("/vote", { replace: true });
   };
 
-  // --- RENDER STEPS ---
+  // Render Step Content
   const renderStepContent = () => {
     const animationClass =
       direction === "next" ? "animate-slideInRight" : "animate-slideInLeft";
 
     switch (step) {
-      // STEP 1: PERSONAL
       case 1:
         return (
           <div
@@ -1069,12 +823,12 @@ const UserDetails = () => {
               subtitle="Establish your identity"
             />
 
-            {/* Name Input */}
+            {/* Name */}
             <div className="relative group">
-              <label className="text-[8px] lg:text-[12px] font-bold text-accet font-heading uppercase tracking-wide mb-1.5 md:mb-2 block md:px-1">
+              <label className="text-[8px] lg:text-[12px] font-bold text-accet font-heading uppercase tracking-wide mb-1.5 md:mb-2 block">
                 {t("labels.fullName")}
               </label>
-              <div className="relative bg-shade flex justify-center items-center border border-white/20 md:px-4 py-2.5 md:py-3 px-3 group-hover:border-accet/30 transition-colors">
+              <div className="relative bg-shade border border-white/20 md:px-4 py-2.5 md:py-3 px-3 group-hover:border-accet/30 transition-colors">
                 <input
                   type="text"
                   value={formData.name}
@@ -1085,9 +839,9 @@ const UserDetails = () => {
               </div>
             </div>
 
-            {/* Gender Selection */}
+            {/* Gender */}
             <div>
-              <label className="text-[8px] lg:text-[12px] font-bold text-accet font-heading uppercase tracking-wide mb-1.5 md:mb-3 block md:px-1">
+              <label className="text-[8px] lg:text-[12px] font-bold text-accet font-heading uppercase tracking-wide mb-1.5 md:mb-3 block">
                 {t("labels.gender")}
               </label>
               <div className="grid grid-cols-3 gap-3">
@@ -1095,7 +849,7 @@ const UserDetails = () => {
                   <button
                     key={gender.value}
                     onClick={() => handleChange("gender", gender.value)}
-                    className={`py-2.5 px-2 md:p-4 border backdrop-blur-xl text-center transition-all flex justify-center gap-2 items-center duration-300 ${
+                    className={`py-2.5 px-2 md:p-4 border backdrop-blur-xl text-center transition-all duration-300 ${
                       formData.gender === gender.value
                         ? "bg-gradient-to-br from-accet/20 to-indigo-500/20 border-accet text-white shadow-lg shadow-accet/20"
                         : "bg-shade border-white/20 text-white hover:border-white/30"
@@ -1109,9 +863,9 @@ const UserDetails = () => {
               </div>
             </div>
 
-            {/* Age Selection */}
+            {/* Age */}
             <div>
-              <label className="text-[8px] lg:text-[12px] font-bold text-accet font-heading uppercase tracking-wide mb-1.5 md:mb-3 block md:px-1">
+              <label className="text-[8px] lg:text-[12px] font-bold text-accet font-heading uppercase tracking-wide mb-1.5 md:mb-3 block">
                 {t("labels.ageGroup")}
               </label>
               <div className="grid grid-cols-3 gap-2">
@@ -1119,7 +873,7 @@ const UserDetails = () => {
                   <button
                     key={age.value}
                     onClick={() => handleChange("age", age.value)}
-                    className={`py-2.5 md:py-3 px-2 border backdrop-blur-xl text-center flex justify-center items-center transition-all duration-300 ${
+                    className={`py-2.5 md:py-3 px-2 border backdrop-blur-xl text-center transition-all duration-300 ${
                       formData.age === age.value
                         ? "bg-gradient-to-br from-accet/20 to-indigo-500/20 border-accet text-white shadow-lg shadow-accet/20"
                         : "bg-shade border-white/20 text-white hover:border-white/30"
@@ -1143,7 +897,6 @@ const UserDetails = () => {
           </div>
         );
 
-      // STEP 2: LOCATION
       case 2:
         return (
           <div
@@ -1156,9 +909,9 @@ const UserDetails = () => {
               subtitle="Map your background"
             />
 
-            {/* District Selection */}
+            {/* District */}
             <div className="relative group">
-              <label className="text-[8px] lg:text-[12px] font-bold text-accet font-heading uppercase tracking-wide mb-1.5 md:mb-2 block md:px-1">
+              <label className="text-[8px] lg:text-[12px] font-bold text-accet font-heading uppercase tracking-wide mb-1.5 md:mb-2 block">
                 {t("labels.district")}
               </label>
               <div
@@ -1185,9 +938,9 @@ const UserDetails = () => {
               </div>
             </div>
 
-            {/* Religion Selection */}
+            {/* Religion */}
             <div>
-              <label className="text-[8px] lg:text-[12px] font-bold text-accet font-heading uppercase tracking-widest mb-1.5 md:mb-3 block md:px-1">
+              <label className="text-[8px] lg:text-[12px] font-bold text-accet font-heading uppercase tracking-widest mb-1.5 md:mb-3 block">
                 {t("labels.religion")}
               </label>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-1 lg:gap-3">
@@ -1195,9 +948,9 @@ const UserDetails = () => {
                   <button
                     key={religion.value}
                     onClick={() => handleChange("religion", religion.value)}
-                    className={`py-2.5 md:py-3 px-2 border backdrop-blur-xl flex flex-col gap-2 justify-center items-center text-center transition-all duration-300 ${
+                    className={`py-2.5 md:py-3 px-2 border backdrop-blur-xl text-center transition-all duration-300 ${
                       formData.religion === religion.value
-                        ? "bg-linear-to-br from-accet/20 to-indigo-500/20 border-accet text-white shadow-lg shadow-accet/20"
+                        ? "bg-gradient-to-br from-accet/20 to-indigo-500/20 border-accet text-white shadow-lg shadow-accet/20"
                         : "bg-shade border-white/20 text-white hover:border-white/30"
                     }`}
                   >
@@ -1209,9 +962,9 @@ const UserDetails = () => {
               </div>
             </div>
 
-            {/* Mother Tongue Selection */}
+            {/* Mother Tongue */}
             <div>
-              <label className="text-[8px] lg:text-[12px] font-bold text-accet font-heading uppercase tracking-widest mb-1.5 md:mb-3 block md:px-1">
+              <label className="text-[8px] lg:text-[12px] font-bold text-accet font-heading uppercase tracking-widest mb-1.5 md:mb-3 block">
                 {t("labels.motherTongue")}
               </label>
               <div className="grid grid-cols-3 gap-2 lg:gap-3">
@@ -1219,7 +972,7 @@ const UserDetails = () => {
                   <button
                     key={lang.value}
                     onClick={() => handleChange("motherTongue", lang.value)}
-                    className={`py-2.5 md:py-3 px-2 border backdrop-blur-xl flex justify-center items-center text-center transition-all duration-300 ${
+                    className={`py-2.5 md:py-3 px-2 border backdrop-blur-xl text-center transition-all duration-300 ${
                       formData.motherTongue === lang.value
                         ? "bg-gradient-to-br from-accet/20 to-indigo-500/20 border-accet text-white shadow-lg shadow-accet/20"
                         : "bg-shade border-white/20 text-white hover:border-white/30"
@@ -1235,7 +988,6 @@ const UserDetails = () => {
           </div>
         );
 
-      // STEP 3: CONTACT & COMMUNITY
       case 3:
         return (
           <div
@@ -1248,9 +1000,9 @@ const UserDetails = () => {
               subtitle="Contact & Community details"
             />
 
-            {/* Phone Number */}
+            {/* Phone */}
             <div className="relative group">
-              <label className="text-[8px] lg:text-[12px] text-accet font-bold font-heading uppercase tracking-widest mb-1.5 md:mb-2 block md:px-1">
+              <label className="text-[8px] lg:text-[12px] text-accet font-bold font-heading uppercase tracking-widest mb-1.5 md:mb-2 block">
                 {t("labels.phoneNumber")}
               </label>
               <div className="relative bg-shade border border-white/20 md:px-4 py-2.5 md:py-3 px-2 group-hover:border-accet/30 transition-colors">
@@ -1297,9 +1049,9 @@ const UserDetails = () => {
               </div>
             </div>
 
-            {/* Community Selection */}
+            {/* Community */}
             <div>
-              <label className="text-[8px] lg:text-[12px] font-bold text-accet font-heading uppercase tracking-widest mb-1.5 md:mb-3 block md:px-1">
+              <label className="text-[8px] lg:text-[12px] font-bold text-accet font-heading uppercase tracking-widest mb-1.5 md:mb-3 block">
                 {t("labels.community")}
               </label>
               <div className="grid grid-cols-3 gap-2 lg:gap-3">
@@ -1310,7 +1062,7 @@ const UserDetails = () => {
                     className={`py-2.5 md:py-3 px-2 md:min-h-[70px] backdrop-blur-xl border text-center flex flex-col justify-center items-center transition-all duration-300 ${
                       formData.community === community.value
                         ? "bg-gradient-to-br from-accet/20 to-indigo-500/20 border-accet text-white shadow-lg shadow-accet/20"
-                        : "bg-shade border-white/20 text-black hover:border-white/30"
+                        : "bg-shade border-white/20 hover:border-white/30"
                     }`}
                   >
                     <span className="text-[9px] lg:text-[16px] font-heading font-bold text-white tracking-widest">
@@ -1324,9 +1076,9 @@ const UserDetails = () => {
               </div>
             </div>
 
-            {/* Caste Input with Autocomplete from API */}
+            {/* Caste */}
             <div className="relative group">
-              <label className="text-[8px] lg:text-[12px] font-bold text-accet font-heading uppercase tracking-widest mb-1.5 md:mb-2 block md:px-1">
+              <label className="text-[8px] lg:text-[12px] font-bold text-accet font-heading uppercase tracking-widest mb-1.5 md:mb-2 block">
                 {t("labels.caste")}
               </label>
               <SearchableSelect
@@ -1335,13 +1087,11 @@ const UserDetails = () => {
                 options={casteList}
                 placeholder={t("placeholders.caste") || "Search your caste..."}
                 loading={casteLoading}
-                t={t}
               />
             </div>
           </div>
         );
 
-      // STEP 4: VERIFICATION
       case 4:
         return (
           <div
@@ -1354,9 +1104,9 @@ const UserDetails = () => {
               subtitle="Final verification step"
             />
 
-            {/* ID Type Selection */}
+            {/* ID Type */}
             <div>
-              <label className="text-[8px] lg:text-[12px] font-bold text-accet font-heading uppercase tracking-widest mb-1.5 md:mb-3 block md:px-1">
+              <label className="text-[8px] lg:text-[12px] font-bold text-accet font-heading uppercase tracking-widest mb-1.5 md:mb-3 block">
                 {t("labels.idType")}
               </label>
               <div className="grid grid-cols-2 gap-1.5 lg:gap-3">
@@ -1367,7 +1117,7 @@ const UserDetails = () => {
                       handleChange("idType", id.value);
                       setFormData((prev) => ({ ...prev, idNumber: "" }));
                     }}
-                    className={`py-2.5 md:p-5 border backdrop-blur-xl text-center transition-all flex flex-col justify-center gap-2 items-center duration-300 ${
+                    className={`py-2.5 md:p-5 border backdrop-blur-xl text-center transition-all duration-300 ${
                       formData.idType === id.value
                         ? "bg-gradient-to-br from-accet/20 to-indigo-500/20 border-accet text-white shadow-lg shadow-accet/20"
                         : "bg-shade border-white/20 text-white hover:border-white/30"
@@ -1381,10 +1131,10 @@ const UserDetails = () => {
               </div>
             </div>
 
-            {/* ID Number Input */}
+            {/* ID Number */}
             {formData.idType && (
               <div className="relative group animate-fadeIn">
-                <label className="text-[9px] lg:text-[12px] text-accet font-bold font-heading uppercase tracking-wide mb-1 md:mb-2 block md:px-1">
+                <label className="text-[9px] lg:text-[12px] text-accet font-bold font-heading uppercase tracking-wide mb-1 md:mb-2 block">
                   {formData.idType === "aadhar"
                     ? t("labels.aadharNumber")
                     : t("labels.dlNumber")}
@@ -1404,41 +1154,12 @@ const UserDetails = () => {
                     }
                     className="w-full bg-transparent text-white font-body text-[10px] md:text-[14px] outline-none placeholder:text-white/30 tracking-widest uppercase"
                   />
-                  <div className="md:mt-2 flex items-center gap-2">
-                    <div className="flex-1 h-0.5 bg-white/10 rounded-full overflow-hidden">
-                      <div
-                        className={`h-full transition-all duration-300 ${
-                          formData.idNumber.length ===
-                          idTypes.find((id) => id.value === formData.idType)
-                            ?.maxLength
-                            ? "bg-green-500"
-                            : "bg-accet"
-                        }`}
-                        style={{
-                          width: `${
-                            (formData.idNumber.length /
-                              (idTypes.find(
-                                (id) => id.value === formData.idType
-                              )?.maxLength || 12)) *
-                            100
-                          }%`,
-                        }}
-                      />
-                    </div>
-                    <span className="text-[9px] text-white/50 font-body">
-                      {formData.idNumber.length}/
-                      {
-                        idTypes.find((id) => id.value === formData.idType)
-                          ?.maxLength
-                      }
-                    </span>
-                  </div>
                 </div>
               </div>
             )}
 
             {/* Privacy Notice */}
-            <div className="bg-linear-to-r from-green-500/10 to-emerald-500/10 border border-green-500/30 p-2 md:p-4">
+            <div className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 border border-green-500/30 p-2 md:p-4">
               <div className="flex items-start gap-3">
                 <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center shrink-0">
                   <svg
@@ -1459,14 +1180,14 @@ const UserDetails = () => {
                   <p className="text-[8px] lg:text-[12px] text-green-400 font-heading uppercase tracking-wider">
                     {t("user_messages.dataSecure")}
                   </p>
-                  <p className="text-[6px] lg:text-[10px] text-white/50 font-body mt-1 leading-relaxed">
+                  <p className="text-[6px] lg:text-[10px] text-white/50 font-body mt-1">
                     {t("user_messages.encryptionNotice")}
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* Agreement Checkbox */}
+            {/* Agreement */}
             <div
               onClick={() => {
                 Click();
@@ -1487,11 +1208,11 @@ const UserDetails = () => {
               </div>
               <p className="text-[8px] lg:text-[11px] text-white/60 font-body leading-relaxed">
                 {t("user_messages.agreement")}{" "}
-                <span className="text-accet underline cursor-pointer">
+                <span className="text-accet underline">
                   {t("user_messages.privacyPolicy")}
                 </span>{" "}
                 and{" "}
-                <span className="text-accet underline cursor-pointer">
+                <span className="text-accet underline">
                   {t("user_messages.terms")}
                 </span>
                 .
@@ -1505,109 +1226,173 @@ const UserDetails = () => {
     }
   };
 
+  // ========================================
+  // ✅ RENDER
+  // ========================================
   return (
-    <div className="h-dvh lg:h-screen relative font-body">
-      <div className="container mx-auto px-4 py-3 md:py-6 relative z-10">
-        {/* Header */}
-        <div className="flex justify-center items-center mb-4 md:mb-6">
-          <div className="text-center">
-            <h1 className="text-xl lg:text-3xl font-heading uppercase font-black tracking-wide leading-6 text-transparent bg-linear-to-r from-accet to-indigo-400 bg-clip-text">
-              {t("header.title")}
-            </h1>
-            <p className="text-[8px] lg:text-[13px] md:mt-1 font-medium text-white/40 font-body">
-              {t("header.subtitle")}
-            </p>
+    <div className="bg-black">
+      {/* ✅ MAIN CONTAINER */}
+      <div
+        ref={mainContainerRef}
+        className="relative w-full overflow-hidden"
+        style={{
+          height: fixedHeight ? `${fixedHeight}px` : "100vh",
+        }}
+      >
+        {/* ═══════════════════════════════════════════════
+            ✅ FORM LAYER - BEHIND (z-index: 10)
+        ═══════════════════════════════════════════════ */}
+        <div
+          ref={formLayerRef}
+          className={`absolute inset-0 z-10 ${
+            isRevealed ? "" : "pointer-events-none"
+          }`}
+          style={{
+            height: fixedHeight ? `${fixedHeight}px` : "100vh",
+            transformOrigin: "center center",
+            willChange: "transform, opacity",
+            opacity: 0, // ✅ Start hidden
+            transform: "scale(0.2)", // ✅ Start small
+          }}
+        >
+          <div className="lg:h-full w-full h-screen overflow-hidden lg:overflow-y-scroll">
+            <div className="lg:min-h-screen py-8 lg:py-12">
+              <div className="container mx-auto px-4">
+                {/* Header */}
+                <div className="flex justify-center items-center mb-4 md:mb-6">
+                  <div className="text-center">
+                    <h1 className="text-xl lg:text-3xl font-heading uppercase font-black tracking-wide leading-6 text-transparent bg-gradient-to-r from-accet to-indigo-400 bg-clip-text">
+                      {t("header.title")}
+                    </h1>
+                    <p className="text-[8px] lg:text-[13px] md:mt-1 font-medium text-white/40 font-body">
+                      {t("header.subtitle")}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Step Indicator */}
+                <StepIndicator
+                  currentStep={step}
+                  totalSteps={totalSteps}
+                  steps={steps}
+                  subtitle={subtitle}
+                />
+
+                {/* Form Card */}
+                <div className="lg:max-w-4xl mx-auto">
+                  <div className="bg-shade/50 backdrop-blur-[2px] border border-white/10 rounded-xl p-4 lg:px-8 lg:py-6 lg:min-h-[450px] flex flex-col">
+                    {/* Form Content */}
+                    <div className="flex-1">{renderStepContent()}</div>
+
+                    {/* Navigation */}
+                    <div className="flex justify-between items-center mt-3 md:mt-8 pt-3 md:pt-6 border-t border-white/10">
+                      <button
+                        onClick={handleBack}
+                        className={`flex items-center gap-2 px-4 md:px-6 py-2.5 md:py-3 text-[10px] lg:text-[12px] uppercase font-heading font-bold tracking-widest transition-all ${
+                          step === 1
+                            ? "opacity-0 pointer-events-none"
+                            : "text-white/50 hover:text-white"
+                        }`}
+                      >
+                        <HiArrowLeft /> {t("vote_messages.back") || "Back"}
+                      </button>
+
+                      {step < totalSteps ? (
+                        <button
+                          onClick={handleNext}
+                          disabled={!isStepValid()}
+                          className={`flex items-center gap-2 px-4 md:px-6 py-2.5 md:py-3 font-heading text-[10px] lg:text-[12px] tracking-wider uppercase font-bold transition-all duration-300 ${
+                            isStepValid()
+                              ? "bg-gradient-to-r from-accet/80 to-accet text-white hover:shadow-lg hover:shadow-accet/30"
+                              : "bg-white/5 text-white/30 cursor-not-allowed"
+                          }`}
+                        >
+                          {t("vote_messages.next") || "Continue"}{" "}
+                          <HiArrowRight />
+                        </button>
+                      ) : (
+                        <button
+                          onClick={handleSubmit}
+                          disabled={!isStepValid() || isSubmitting}
+                          className={`flex items-center gap-2 md:px-8 px-4 md:py-3 py-2.5 font-heading text-[11px] lg:text-[12px] tracking-wider uppercase font-bold transition-all duration-300 ${
+                            isStepValid() && !isSubmitting
+                              ? "bg-gradient-to-r from-green-600 to-emerald-500 text-white hover:shadow-lg hover:shadow-green-500/30"
+                              : "bg-white/5 text-white/30 cursor-not-allowed"
+                          }`}
+                        >
+                          {isSubmitting ? (
+                            <>
+                              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                              Processing...
+                            </>
+                          ) : (
+                            <>
+                              <MdVerifiedUser className="text-[12px] md:text-base" />
+                              {t("vote_messages.finish") || "Proceed to Vote"}
+                            </>
+                          )}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Quick Links */}
+                  <div className="text-[7px] lg:text-[10px] tracking-widest text-white/40 flex justify-between items-center mt-2 md:mt-3 px-2 font-heading">
+                    <button
+                      onClick={() => navigate("/privacy")}
+                      className="hover:text-white transition-colors"
+                    >
+                      {t("user_messages.privacyPolicy")}
+                    </button>
+                    <button
+                      onClick={() => navigate("/terms")}
+                      className="hover:text-white transition-colors"
+                    >
+                      {t("user_messages.terms")}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Main Content */}
-        <div className="lg:flex lg:gap-8 lg:items-start md:w-[95%] justify-center mx-auto">
-          {/* Left Column - ID Card */}
-          <div className="hidden lg:block sticky top-3 lg:top-6 lg:w-112.5 lg:shrink-0 z-10">
-            <DigitalIDCard data={formData} t={t} trackerId={trackerId} />
-          </div>
+        {/* ═══════════════════════════════════════════════
+            ✅ IMAGE LAYER - FRONT (z-index: 20)
+        ═══════════════════════════════════════════════ */}
+        <div
+          ref={imageLayerRef}
+          className={`absolute bottom-0 inset-0 z-20 overflow-hidden ${
+            isRevealed ? "pointer-events-none" : ""
+          }`}
+          style={{
+            height: fixedHeight ? `${fixedHeight}px` : "100vh",
+            transformOrigin: "center center",
+            willChange: "transform, opacity",
+          }}
+        >
+          {/* Background Image */}
+          <img
+            src="https://res.cloudinary.com/dfgyjzm7c/image/upload/v1768047744/ChatGPT_Image_Jan_10_2026_05_39_30_PM_uilkls.png"
+            alt="Hero Background"
+            className="w-full object-fit"
+            style={{ height: fixedHeight ? `${fixedHeight}px` : "100vh" }}
+          />
 
-          <div className=" w-full h-[30dvh] flex lg:hidden justify-center items-center">
-              <img src="https://res.cloudinary.com/dfgyjzm7c/image/upload/v1768042206/Google_AI_Studio_2026-01-10T09_52_04.383Z_dv7hdr.png" alt="img" className="w-[300px] h-[30vh] object-cover" />
-          </div>
+          {/* Dark Overlay */}
+          <div className="absolute inset-0 bg-linear-to-b from-black/40 via-black/30 to-black/60" />
 
-          {/* Right Column - Form */}
-          <div className="flex-1 lg:w-[90%]">
-            <div className="bg-shade/50 backdrop-blur-[2px] border border-white/10 rounded-xl p-4 lg:px-8 lg:py-6 lg:min-h-112.5 flex flex-col">
-              {/* Form Content */}
-              <div className="lg:flex-1">{renderStepContent()}</div>
-
-              {/* Navigation Buttons */}
-              <div className="flex justify-between items-center mt-3 md:mt-8 pt-3 md:pt-6 border-t border-white/10">
-                <button
-                  onClick={handleBack}
-                  className={`flex items-center gap-2 px-4 md:px-6 py-2.5 md:py-3 text-[10px] lg:text-[12px] uppercase font-heading font-bold tracking-widest transition-all ${
-                    step === 1
-                      ? "opacity-0 pointer-events-none"
-                      : "text-white/50 hover:text-white"
-                  }`}
-                >
-                  <HiArrowLeft /> {t("vote_messages.back") || "Back"}
-                </button>
-
-                {step < totalSteps ? (
-                  <button
-                    onClick={handleNext}
-                    disabled={!isStepValid()}
-                    className={`flex items-center gap-2 px-4 md:px-6 py-2.5 md:py-3 font-heading text-[10px] lg:text-[12px] tracking-wider uppercase font-bold transition-all duration-300 ${
-                      isStepValid()
-                        ? "bg-gradient-to-r from-accet/80 to-accet text-white hover:shadow-lg hover:shadow-accet/30"
-                        : "bg-white/5 text-white/30 cursor-not-allowed"
-                    }`}
-                  >
-                    {t("vote_messages.next") || "Continue"} <HiArrowRight />
-                  </button>
-                ) : (
-                  <button
-                    onClick={handleSubmit}
-                    disabled={!isStepValid() || isSubmitting}
-                    className={`flex items-center gap-2 md:px-8 px-4 md:py-3 py-2.5 font-heading text-[11px] lg:text-[12px] tracking-wider uppercase font-bold transition-all duration-300 ${
-                      isStepValid() && !isSubmitting
-                        ? "bg-gradient-to-r from-green-600 to-emerald-500 text-white hover:shadow-lg hover:shadow-green-500/30"
-                        : "bg-white/5 text-white/30 cursor-not-allowed"
-                    }`}
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        Processing...
-                      </>
-                    ) : (
-                      <>
-                        <MdVerifiedUser className="text-[12px] md:text-base" />
-                        {t("vote_messages.finish") || "Proceed to Vote"}
-                      </>
-                    )}
-                  </button>
-                )}
-              </div>
-            </div>
-
-            {/* Quick Links */}
-            <div className="text-[7px] lg:text-[10px] tracking-widest text-white/40 flex justify-between items-center mt-2 md:mt-3 px-2 font-heading">
-              <button
-                onClick={() => navigate("/privacy")}
-                className="hover:text-white cursor-pointer transition-colors"
-              >
-                {t("user_messages.privacyPolicy")}
-              </button>
-              <button
-                onClick={() => navigate("/terms")}
-                className="hover:text-white cursor-pointer transition-colors"
-              >
-                {t("user_messages.terms")}
-              </button>
-            </div>
-          </div>
+          {/* ✅ CLICK INDICATOR (Changed from ScrollIndicator) */}
+          {!isRevealed && (
+            <ClickIndicator
+              onClick={handleContinueClick}
+              isAnimating={isAnimating}
+            />
+          )}
         </div>
       </div>
 
-      {/* Map Modal */}
+      {/* Modals */}
       {showMap && (
         <DistrictMapPicker
           currentDistrict={formData.district}
@@ -1619,12 +1404,9 @@ const UserDetails = () => {
         />
       )}
 
-      {/* Error Modal */}
       {showError && (
         <ErrorModal message={error} onClose={() => setShowError(false)} />
       )}
-
-      {/* Success Modal */}
       {showSuccess && (
         <SuccessModal
           trackerId={trackerId}
@@ -1632,20 +1414,8 @@ const UserDetails = () => {
         />
       )}
 
-      {/* Custom Animations */}
+      {/* ✅ ANIMATIONS */}
       <style jsx>{`
-        @keyframes float {
-          0%,
-          100% {
-            transform: translateY(0);
-            opacity: 0.3;
-          }
-          50% {
-            transform: translateY(-20px);
-            opacity: 0.8;
-          }
-        }
-
         @keyframes slideInRight {
           from {
             opacity: 0;
@@ -1656,7 +1426,6 @@ const UserDetails = () => {
             transform: translateX(0);
           }
         }
-
         @keyframes slideInLeft {
           from {
             opacity: 0;
@@ -1667,19 +1436,6 @@ const UserDetails = () => {
             transform: translateX(0);
           }
         }
-
-        .animate-slideInRight {
-          animation: slideInRight 0.3s ease-out;
-        }
-
-        .animate-slideInLeft {
-          animation: slideInLeft 0.3s ease-out;
-        }
-
-        .animate-fadeIn {
-          animation: fadeIn 0.3s ease-out;
-        }
-
         @keyframes fadeIn {
           from {
             opacity: 0;
@@ -1687,6 +1443,15 @@ const UserDetails = () => {
           to {
             opacity: 1;
           }
+        }
+        .animate-slideInRight {
+          animation: slideInRight 0.3s ease-out;
+        }
+        .animate-slideInLeft {
+          animation: slideInLeft 0.3s ease-out;
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.3s ease-out;
         }
       `}</style>
     </div>

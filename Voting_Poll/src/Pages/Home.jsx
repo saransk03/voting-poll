@@ -33,7 +33,6 @@ const Home = () => {
     },
   ];
 
-
   // useEffect(() => {
   //   if (videoRef.current) {
   //     videoRef.current.playbackRate = 0.5; // 👈 0.5 = half speed (slow motion)
@@ -54,7 +53,7 @@ const Home = () => {
       <nav className="fixed top-0 w-full z-40  bg-black/40 backdrop-blur-xl">
         <div className="w-[90%] mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
           {/* Logo */}
-         <Link to={'/user'}>
+          <Link to={"/user"}>
             <div className="flex items-center gap-3 md:gap-4 group cursor-pointer">
               <div className="relative">
                 <div className="w-1.5 h-1.5 md:w-3 md:h-3 bg-accet group-hover:shadow-[0_0_20px_#4C43DD] transition-all duration-500" />
@@ -64,7 +63,7 @@ const Home = () => {
                 {t("home.nav.brand")}
               </span>
             </div>
-         </Link>
+          </Link>
 
           {/* Right Side Controls */}
           <div className="flex items-center">
@@ -218,15 +217,19 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="h-100 lg:h-[90dvh] bg-black flex flex-col justify-center items-center z-50 rounded-2xl lg:rounded-[30px] drop-shadow-[0px_0px_20px] drop-shadow-accet/30 overflow-hidden">
-            <video 
+          <div className="h-100 lg:h-[90dvh] flex flex-col justify-center items-center z-50 rounded-2xl lg:rounded-[30px] drop-shadow-[0px_0px_0px] drop-shadow-accet/30 overflow-hidden">
+            {/* <video 
             // ref={videoRef}
             autoPlay
             muted
             playsInline
             loop
             src="https://res.cloudinary.com/dfgyjzm7c/video/upload/v1768040895/Project_01-08_4__Full_HD_1080p_MEDIUM_FR30__1_lkxlve.mp4"
-            ></video>
+            ></video> */}
+            <iframe
+              src="https://tinyglb.com/viewer/86ef964c2bed4803ad229723109fc5e5"
+              style={{ border: 0, height: 600, width: "100%" }}
+            />
           </div>
 
           <div className="w-[98%] md:w-[90%] mx-auto flex flex-col justify-end items-end mt-3 lg:mt-0">
@@ -270,7 +273,6 @@ const Home = () => {
           </div>
         </div>
       </div>
-
 
       {/* start button section */}
       <div className="max-w-7xl mx-auto px-6 py-5 md:py-10">
@@ -340,4 +342,3 @@ const Home = () => {
 };
 
 export default Home;
-
