@@ -14,6 +14,7 @@ import Thanks from "./Pages/Thanks";
 import PrivacyPolicy from "./Pages/PrivacyPolicy";
 import TermsAndConditions from "./Pages/TermsAndConditions";
 import FormPage from "./Pages/FormPage";
+import ScrollToTop from "./Components/ScrollToTop";
 
 
 const getRedirectPath = (status) => {
@@ -90,6 +91,7 @@ function App() {
       <div className="scanline" />
 
       <BrowserRouter>
+      <ScrollToTop behavior="smooth" />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />

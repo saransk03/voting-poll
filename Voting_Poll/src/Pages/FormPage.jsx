@@ -1146,8 +1146,7 @@ const FormPage = () => {
             willChange: "transform, opacity",
           }}
         >
-          <div className="lg:h-full w-full overflow-hidden lg:overflow-y-auto"
-          style={{ height: fixedHeight ? `${fixedHeight}px` : '100vh' }}
+          <div className="lg:h-full w-full h-screen overflow-hidden lg:overflow-y-scroll"
           >
             <div className="lg:min-h-screen py-8 lg:py-12">
               <div className="container mx-auto px-4">
